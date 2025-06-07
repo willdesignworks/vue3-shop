@@ -1,90 +1,62 @@
 <template>
-  <Teleport to="body">
-    <!-- Modal 遮罩 -->
-    <div v-if="showModal" class="modal-backdrop fade show" :style="{ zIndex: 1040 }" @click="handleBackdropClick"></div>
-
-    <!-- Modal 本體 -->
-    <div v-if="showModal" class="modal fade show d-block" tabindex="-1" role="dialog" :style="{ zIndex: 1050 }">
+  <div v-if="product">
+    <!-- Modal -->
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ product.title }}</h5>
-            <button type="button" class="btn-close" @click="closeModal" aria-label="Close" />
+            <button type="button" class="btn-close" @click="close" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6">
-                <img :src="product.imageUrl" class="img-fluid" alt="" />
+                <img :src="product.imageUrl" class="img-fluid" alt="product" />
               </div>
               <div class="col-md-6">
                 <p>{{ product.description }}</p>
                 <h4>價格：NT ${{ product.price }}</h4>
-                <button class="btn btn-dark mt-3" @click="handleAddToCart">加入購物車</button>
+                <button class="btn btn-dark mt-3" @click="handleAddToCart">
+                  加入購物車
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </Teleport>
+    <!-- 自製遮罩（Bootstrap 不提供 v-if 控制） -->
+    <div class="modal-backdrop fade show"></div>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
-
+// Props
 const props = defineProps({
   product: Object
 })
+
+// Emits
 const emit = defineEmits(['close', 'add-to-cart'])
 
-const showModal = ref(false)
-
-// 控制開啟
-watch(
-  () => props.product,
-  (val) => {
-    if (val && val.title) {
-      showModal.value = true
-      document.body.classList.add('modal-open') // 禁止背景滾動
-    }
-  }
-)
-
-// 控制關閉
-const closeModal = () => {
-  showModal.value = false
-  document.body.classList.remove('modal-open')
-  emit('close')
-}
-
+// 加入購物車
 const handleAddToCart = () => {
   emit('add-to-cart', props.product)
-  closeModal()
 }
 
-// 點遮罩關閉
-const handleBackdropClick = () => {
-  closeModal()
+// 關閉 Modal
+const close = () => {
+  emit('close')
 }
-
-// 離開元件時清除 class
-onUnmounted(() => {
-  document.body.classList.remove('modal-open')
-})
 </script>
 
 <style scoped>
-/* 防止 body 滾動 */
-.modal-open {
-  overflow: hidden;
+/* 讓遮罩不要蓋住 Modal 本體 */
+.modal-backdrop {
+  z-index: 1040;
 }
 
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+.modal {
+  z-index: 1050;
 }
 </style>
