@@ -12,7 +12,6 @@ import "./assets/css/custom.css";
 // css
 import "./assets/css/style_will.css";
 
-import "./style.css";
 import App from "./App.vue";
 
 createApp(App).mount("#app");
