@@ -4,7 +4,7 @@
     <Loading :isLoading="isLoading" />
 
     <!-- FrontProductModal 組件 -->
-    <FrontProductModal :product="selectedProduct" :show="isModalOpen" @close="closeProductModal"
+    <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
       @add-to-cart="addToCart" />
 
     <!-- HomeBanner 組件 -->
@@ -178,12 +178,13 @@ const addToCart = async (product) => {
 
 // Modal-開啟
 const openProductModal = (product) => {
-  selectedProduct.value = product
-  isModalOpen.value = true
+  if (product && product.id) {
+    selectedProduct.value = product
+  }
 }
+
 // Modal-關閉
 const closeProductModal = () => {
-  isModalOpen.value = false
   selectedProduct.value = null
 }
 

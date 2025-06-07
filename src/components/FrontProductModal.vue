@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true" ref="modalRef" v-show="show">
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true" ref="modalRef">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -29,18 +29,18 @@ import { Modal } from 'bootstrap'
 
 // Props
 const props = defineProps({
-  product: Object,
-  show: Boolean
+  product: Object
 })
+
 // Emits
 const emit = defineEmits(['close', 'add-to-cart'])
 
 const modalRef = ref(null)
 let bsModal = null
 
-// 當 product 有值 → 顯示 Modal
-watch(() => props.show, (newVal) => {
-  if (newVal && bsModal) {
+// 顯示 modal 當 product 有值
+watch(() => props.product, (newVal) => {
+  if (newVal && newVal.id && bsModal) {
     bsModal.show()
   }
 })
@@ -49,7 +49,6 @@ watch(() => props.show, (newVal) => {
 onMounted(() => {
   if (modalRef.value) {
     bsModal = new Modal(modalRef.value)
-    // Modal 關閉後通知父層關閉 modal 狀態
     modalRef.value.addEventListener('hidden.bs.modal', () => {
       emit('close')
     })
@@ -63,13 +62,13 @@ onUnmounted(() => {
   }
 })
 
-// 事件：加入購物車
+// 加入購物車
 const handleAddToCart = () => {
   emit('add-to-cart', props.product)
   bsModal.hide()
 }
 
-// 事件：關閉 Modal
+// 關閉 Modal
 const close = () => {
   bsModal.hide()
 }
