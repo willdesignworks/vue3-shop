@@ -9,11 +9,7 @@ export default defineConfig({
     inject({
       $: "jquery",
       jQuery: "jquery",
+      include: ["**/*.js", "**/*.vue"], // 只作用在 JS/Vue 檔案
     }),
   ],
-  resolve: {
-    alias: {
-      jquery: "jquery",
-    },
-  },
 });

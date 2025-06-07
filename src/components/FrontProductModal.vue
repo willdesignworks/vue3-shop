@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ product.title }}</h5>
+          <h5 class="modal-title">{{ product?.title }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
             @click="closeProductModal"></button>
         </div>
@@ -27,7 +27,10 @@ import { Modal } from 'bootstrap'
 import { useCartStore } from '../stores/cartStore'
 
 const props = defineProps({
-  product: Object,
+  product: {
+    type: Object,
+    required: true
+  },
   show: Boolean,
   close: Function
 })
