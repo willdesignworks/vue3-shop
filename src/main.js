@@ -13,8 +13,10 @@ import "./assets/css/custom.css";
 import "./assets/css/style_will.css";
 
 import App from "./App.vue";
-import router from "./router"; // router路由
+import { createPinia } from "pinia";
+import router from "./router"; // router 路由
 
 const app = createApp(App);
-app.use(router); // router路由
+app.use(createPinia()); // Pinia 狀態管理器
+app.use(router); // router 路由
 app.mount("#app");
