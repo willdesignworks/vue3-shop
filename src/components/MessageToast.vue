@@ -1,19 +1,25 @@
 <template>
-  <div v-if="title" class="toast-container position-fixed" style="top: 50px; right: 15px; z-index: 9999">
-    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
-      <div :class="`toast-header text-white bg-${type}`">
-        <strong class="me-auto">{{ title }}</strong>
-        <button type="button" class="btn-close" @click="clearMessage" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        {{ text }}
+  <Teleport to="body">
+    <div class="toast-container position-fixed" style="top: 60px; right: 20px; z-index: 9999" v-if="show">
+      <div class="toast show text-white" :class="bgClass" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-white" :class="bgClass">
+          <strong class="me-auto">{{ message.title }}</strong>
+          <button type="button" class="btn-close btn-close-white ms-2" @click="messageStore.clearMessage"></button>
+        </div>
+        <div class="toast-body">
+          {{ message.text }}
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup>
-import { useMessageStore } from '../stores/messageStore';
-const messageStore = useMessageStore();
-const { title, text, type, clearMessage } = messageStore;
+import { computed } from 'vue'
+import { useMessageStore } from '../stores/messageStore'
+
+const messageStore = useMessageStore()
+const message = computed(() => messageStore.message)
+const show = computed(() => messageStore.show)
+const bgClass = computed(() => `bg-${message.value.type || 'secondary'}`)
 </script>

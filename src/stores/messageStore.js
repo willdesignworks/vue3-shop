@@ -1,33 +1,28 @@
+// stores/messageStore.js
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
-export const useMessageStore = defineStore("message", () => {
-  const title = ref("");
-  const text = ref("");
-  const type = ref("");
+export const useMessageStore = defineStore("message", {
+  state: () => ({
+    message: {
+      title: "",
+      text: "",
+      type: "", // success / danger / warning
+    },
+    show: false,
+  }),
+  actions: {
+    setMessage(payload) {
+      this.message = { ...payload };
+      this.show = true;
 
-  const setMessage = ({ title: t, text: msg, type: msgType }) => {
-    title.value = t;
-    text.value = msg;
-    type.value = msgType;
-
-    // 自動清除訊息
-    setTimeout(() => {
-      clearMessage();
-    }, 3000);
-  };
-
-  const clearMessage = () => {
-    title.value = "";
-    text.value = "";
-    type.value = "";
-  };
-
-  return {
-    title,
-    text,
-    type,
-    setMessage,
-    clearMessage,
-  };
+      // 3 秒後自動清除
+      setTimeout(() => {
+        this.clearMessage();
+      }, 3000);
+    },
+    clearMessage() {
+      this.message = { title: "", text: "", type: "" };
+      this.show = false;
+    },
+  },
 });

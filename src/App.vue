@@ -1,8 +1,8 @@
 <template>
-  <router-view />
+  <RouterView />
   <MessageToast />
 </template>
 
 <script setup>
-import MessageToast from './components/MessageToast.vue';
+import MessageToast from './components/MessageToast.vue'
 </script>
