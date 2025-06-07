@@ -12,6 +12,11 @@ import "./assets/css/custom.css";
 // css
 import "./assets/css/style_will.css";
 
+// owl.carousel
+import "jquery";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel";
+
 import "./style.css";
 import App from "./App.vue";
 
