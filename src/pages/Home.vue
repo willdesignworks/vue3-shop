@@ -94,6 +94,9 @@ import Loading from '../components/Loading.vue';
 import FrontProductModal from '../components/FrontProductModal.vue'; // Modal-商品
 import HomeBanner from '../components/HomeBanner.vue'; // 輪播
 
+// 模組
+import { useMessageStore } from '../stores/messageStore' // 提示框
+
 // Pinia 狀態管理器
 import { useCartStore } from '../stores/cartStore'; // 狀態管理器
 
@@ -102,6 +105,7 @@ const products = ref([]);
 const isLoading = ref(false);
 const selectedCategory = ref('*');
 const selectedProduct = ref({});
+const messageStore = useMessageStore() // 提示框
 
 // 路由
 const router = useRouter();
@@ -145,7 +149,13 @@ const addToCart = async (product) => {
       data
     );
 
-    cartStore.addMessage(response.data);
+    // 顯示成功訊息
+    messageStore.setMessage({
+      title: '成功加入購物車',
+      text: '商品已加入購物車',
+      type: 'success', // 例如：success, danger, warning...
+    });
+
     cartStore.getCart();  // 取得購物車
     closeProductModal();
     window.scrollTo(0, 0);
@@ -153,6 +163,13 @@ const addToCart = async (product) => {
 
   } catch (error) {
     console.error(error);
+
+    // 顯示錯誤訊息
+    messageStore.createMessage({
+      title: '加入購物車失敗',
+      text: '商品無法加入購物車',
+      type: 'danger',
+    });
   } finally {
     isLoading.value = false;
   }

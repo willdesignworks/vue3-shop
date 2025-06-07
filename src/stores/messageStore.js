@@ -1,27 +1,33 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useMessageStore = defineStore("message", {
-  state: () => ({
-    message: {
-      style: "", // 可選 success | danger | warning
-      title: "",
-      content: "",
-      show: false,
-    },
-  }),
-  actions: {
-    createMessage({ style, title, content }) {
-      this.message = {
-        style,
-        title,
-        content,
-        show: true,
-      };
+export const useMessageStore = defineStore("message", () => {
+  const title = ref("");
+  const text = ref("");
+  const type = ref("");
 
-      // 自動在 3 秒後關閉
-      setTimeout(() => {
-        this.message.show = false;
-      }, 3000);
-    },
-  },
+  const setMessage = ({ title: t, text: msg, type: msgType }) => {
+    title.value = t;
+    text.value = msg;
+    type.value = msgType;
+
+    // 自動清除訊息
+    setTimeout(() => {
+      clearMessage();
+    }, 3000);
+  };
+
+  const clearMessage = () => {
+    title.value = "";
+    text.value = "";
+    type.value = "";
+  };
+
+  return {
+    title,
+    text,
+    type,
+    setMessage,
+    clearMessage,
+  };
 });
