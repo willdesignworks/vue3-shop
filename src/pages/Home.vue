@@ -1,34 +1,26 @@
 <template>
   <div>
-    <!-- Loading 組件 -->
+    <!-- Loading -->
     <Loading :isLoading="isLoading" />
 
-    <!-- FrontProductModal 組件 -->
+    <!-- FrontProductModal - 條件渲染 -->
     <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
       @add-to-cart="addToCart" />
 
-    <!-- HomeBanner 組件 -->
+    <!-- Banner -->
     <HomeBanner />
 
-    <!-- 商品區域 -->
+    <!-- 商品列表 -->
     <section class="htc__product__area ptb--130 bg__white">
       <div class="container">
         <div class="htc__product__container">
           <div class="row">
             <div class="col-md-12">
               <div class="product__menu">
-                <button @click="handleFilter('*')" :class="{ 'is-checked': selectedCategory === '*' }">
-                  所有
-                </button>
-                <button @click="handleFilter('衣服')" :class="{ 'is-checked': selectedCategory === '衣服' }">
-                  衣服
-                </button>
-                <button @click="handleFilter('裤子')" :class="{ 'is-checked': selectedCategory === '裤子' }">
-                  裤子
-                </button>
-                <button @click="handleFilter('配件')" :class="{ 'is-checked': selectedCategory === '配件' }">
-                  配件
-                </button>
+                <button @click="handleFilter('*')" :class="{ 'is-checked': selectedCategory === '*' }">所有</button>
+                <button @click="handleFilter('衣服')" :class="{ 'is-checked': selectedCategory === '衣服' }">衣服</button>
+                <button @click="handleFilter('裤子')" :class="{ 'is-checked': selectedCategory === '裤子' }">裤子</button>
+                <button @click="handleFilter('配件')" :class="{ 'is-checked': selectedCategory === '配件' }">配件</button>
               </div>
             </div>
           </div>
@@ -46,8 +38,7 @@
                   <div class="product__hover__info">
                     <ul class="product__action">
                       <li>
-                        <a href="#" title="Quick View" class="quick-view modal-view detail-link"
-                          @click.prevent="openProductModal(product)">
+                        <a href="#" title="Quick View" @click.prevent="openProductModal(product)">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
                           </svg>
@@ -57,8 +48,7 @@
                         <a href="#" title="Add TO Cart" @click.prevent="addToCart(product)">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path
-                              d="M4.00436 6.41686L0.761719 3.17422L2.17593 1.76001L5.41857 5.00265H20.6603C21.2126 5.00265 21.6603 5.45037 21.6603 6.00265C21.6603 6.09997 21.6461 6.19678 21.6182 6.29L19.2182 14.29C19.0913 14.713 18.7019 15.0027 18.2603 15.0027H6.00436V17.0027H17.0044V19.0027H5.00436C4.45207 19.0027 4.00436 18.5549 4.00436 18.0027V6.41686ZM6.00436 7.00265V13.0027H17.5163L19.3163 7.00265H6.00436ZM5.50436 23.0027C4.67593 23.0027 4.00436 22.3311 4.00436 21.5027C4.00436 20.6742 4.67593 20.0027 5.50436 20.0027C6.33279 20.0027 7.00436 20.6742 7.00436 21.5027C7.00436 22.3311 6.33279 23.0027 5.50436 23.0027ZM17.5044 23.0027C16.6759 23.0027 16.0044 22.3311 16.0044 21.5027C16.0044 20.6742 16.6759 20.0027 17.5044 20.0027C18.3328 20.0027 19.0044 20.6742 19.0044 21.5027C19.0044 22.3311 18.3328 23.0027 17.5044 23.0027Z">
-                            </path>
+                              d="M4.00436 6.41686L0.761719 3.17422L2.17593 1.76001L5.41857 5.00265H20.6603C21.2126 5.00265 21.6603 5.45037 21.6603 6.00265C21.6603 6.09997 21.6461 6.19678 21.6182 6.29L19.2182 14.29C19.0913 14.713 18.7019 15.0027 18.2603 15.0027H6.00436V17.0027H17.0044V19.0027H5.00436C4.45207 19.0027 4.00436 18.5549 4.00436 18.0027V6.41686ZM6.00436 7.00265V13.0027H17.5163L19.3163 7.00265H6.00436ZM5.50436 23.0027C4.67593 23.0027 4.00436 22.3311 4.00436 21.5027C4.00436 20.6742 4.67593 20.0027 5.50436 20.0027C6.33279 20.0027 7.00436 20.6742 7.00436 21.5027C7.00436 22.3311 6.33279 23.0027 5.50436 23.0027ZM17.5044 23.0027C16.6759 23.0027 16.0044 22.3311 16.0044 21.5027C16.0044 20.6742 16.6759 20.0027 17.5044 20.0027C18.3328 20.0027 19.0044 20.6742 19.0044 21.5027C19.0044 22.3311 18.3328 23.0027 17.5044 23.0027Z" />
                           </svg>
                         </a>
                       </li>
@@ -66,11 +56,7 @@
                   </div>
                 </div>
                 <div class="product__details">
-                  <h2>
-                    <router-link :to="`/product/${product.id}`">
-                      {{ product.title }}
-                    </router-link>
-                  </h2>
+                  <h2><router-link :to="`/product/${product.id}`">{{ product.title }}</router-link></h2>
                   <ul class="product__price">
                     <li class="new__price">NT ${{ product.price }}</li>
                   </ul>
@@ -85,129 +71,97 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 // 組件
-import Loading from '../components/Loading.vue';
-import FrontProductModal from '../components/FrontProductModal.vue'; // Modal-商品
-import HomeBanner from '../components/HomeBanner.vue'; // 輪播
+import Loading from '../components/Loading.vue'
+import FrontProductModal from '../components/FrontProductModal.vue'
+import HomeBanner from '../components/HomeBanner.vue'
 
-// 模組
-import { useMessageStore } from '../stores/messageStore' // 提示框
+// store
+import { useMessageStore } from '../stores/messageStore'
+import { useCartStore } from '../stores/cartStore'
 
-// Pinia 狀態管理器
-import { useCartStore } from '../stores/cartStore'; // 狀態管理器
+const router = useRouter()
+const products = ref([])
+const isLoading = ref(false)
+const selectedCategory = ref('*')
+const selectedProduct = ref(null)
 
-// 狀態
-const products = ref([]);
-const isLoading = ref(false);
-const selectedCategory = ref('*');
-const isModalOpen = ref(false) // Modal
-const selectedProduct = ref(null) // Modal
-const messageStore = useMessageStore() // 提示框
-
-// 路由
-const router = useRouter();
-
-// Pinia
-const cartStore = useCartStore(); // 狀態管理器
+const messageStore = useMessageStore()
+const cartStore = useCartStore()
 
 // API-取得商品資料
 const getProducts = async () => {
   try {
-    isLoading.value = true;
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const apiPath = import.meta.env.VITE_API_PATH;
-    const response = await axios.get(
-      `${apiUrl}/v2/api/${apiPath}/products/all`
-    );
-    products.value = response.data.products;
-  } catch (error) {
-    console.error('API 請求錯誤:', error);
+    isLoading.value = true
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
+    products.value = res.data.products
+  } catch (err) {
+    console.error(err)
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
-// API-加入購物車
+// API-新增商品
 const addToCart = async (product) => {
   const data = {
     data: {
       product_id: product.id,
-      qty: 1,
-    },
-  };
-  try {
-    isLoading.value = true;
-
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const apiPath = import.meta.env.VITE_API_PATH;
-
-    const response = await axios.post(
-      `${apiUrl}/v2/api/${apiPath}/cart`,
-      data
-    );
-
-    // 顯示成功訊息
-    messageStore.setMessage({
-      title: '成功加入購物車',
-      text: '商品已加入購物車',
-      type: 'success', // 例如：success, danger, warning...
-    });
-
-    cartStore.getCart();  // 取得購物車
-    closeProductModal();
-    window.scrollTo(0, 0);
-    router.push('/cart');
-
-  } catch (error) {
-    console.error(error);
-
-    // 顯示錯誤訊息
-    messageStore.createMessage({
-      title: '加入購物車失敗',
-      text: '商品無法加入購物車',
-      type: 'danger',
-    });
-  } finally {
-    isLoading.value = false;
+      qty: 1
+    }
   }
-};
+  try {
+    isLoading.value = true
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data)
 
-// Modal-開啟
-const openProductModal = (product) => {
-  if (product && product.id) {
-    selectedProduct.value = product
+    messageStore.setMessage({
+      title: '加入成功',
+      text: '已加入購物車',
+      type: 'success'
+    })
+    cartStore.getCart()
+    closeProductModal()
+  } catch (err) {
+    messageStore.setMessage({
+      title: '加入失敗',
+      text: '請稍後再試',
+      type: 'danger'
+    })
+  } finally {
+    isLoading.value = false
   }
 }
 
-// Modal-關閉
+const openProductModal = (product) => {
+  selectedProduct.value = product
+}
+
 const closeProductModal = () => {
   selectedProduct.value = null
 }
 
-// 類別篩選
 const handleFilter = (category) => {
-  selectedCategory.value = category;
-};
+  selectedCategory.value = category
+}
 
-// 計算篩選後的商品
 const filteredProducts = computed(() => {
   if (selectedCategory.value === '*') {
-    return products.value.filter((product) => product.category !== '輪播');
-  } else {
-    return products.value.filter(
-      (product) => product.category === selectedCategory.value
-    );
+    return products.value.filter((p) => p.category !== '輪播')
   }
-});
+  return products.value.filter((p) => p.category === selectedCategory.value)
+})
 
-// 初始化
 onMounted(() => {
-  getProducts();
-});
+  getProducts()
+})
 </script>
 
 <style scoped>
@@ -222,33 +176,5 @@ onMounted(() => {
 .product__menu .is-checked {
   background-color: #333;
   color: #fff;
-}
-
-.product__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.product {
-  border: 1px solid #eaeaea;
-  padding: 20px;
-  text-align: center;
-}
-
-.product__details h2 {
-  font-size: 18px;
-  margin: 10px 0;
-}
-
-.product__price {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.product__price .new__price {
-  color: #e74c3c;
-  font-weight: bold;
 }
 </style>
