@@ -58,5 +58,5 @@ defineProps({
   cartData: Object
 })
 
-const emit = defineEmits(['toggleCart']) // ⬅️ 這裡補上
+const emit = defineEmits(['toggleCart'])
 </script>
