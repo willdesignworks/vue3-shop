@@ -13,7 +13,9 @@ import "./assets/css/custom.css";
 import "./assets/css/style_will.css";
 
 // owl.carousel
-import "jquery";
+import jQuery from "jquery";
+window.$ = window.jQuery = jQuery;
+
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel";
 

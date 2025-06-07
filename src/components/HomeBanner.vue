@@ -28,7 +28,6 @@ import axios from 'axios'
 
 // 引入 owl.carousel
 import $ from 'jquery'
-import 'owl.carousel'
 
 // 輪播資料
 const slides = ref([])

@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import inject from "@rollup/plugin-inject";
+
 export default defineConfig({
   base: "/vue3-shop/", // 這裡填 GitHub 專案名稱
   plugins: [
@@ -9,4 +11,9 @@ export default defineConfig({
       jQuery: "jquery",
     }),
   ],
+  resolve: {
+    alias: {
+      jquery: "jquery",
+    },
+  },
 });
