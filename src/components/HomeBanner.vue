@@ -24,52 +24,69 @@
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios'
 
-// 引入 jQuery
-import $ from 'jquery'
-
 // 輪播資料
 const slides = ref([])
 
-// 取得輪播資料
+// 載入 API 商品
 const getBannerData = async () => {
   try {
+    // 抓取 .env 檔案中設定
     const apiUrl = import.meta.env.VITE_API_URL
     const apiPath = import.meta.env.VITE_API_PATH
+
+    // 使用 axios 取得輪播分類商品
     const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products?category=輪播`)
+
+    // 把商品資料存進 slides，觸發畫面更新
     slides.value = res.data.products
   } catch (error) {
     console.error('API 錯誤:', error)
   }
 }
 
-// 初始化 carousel
+// 初始化 Owl Carousel
 const initCarousel = () => {
-  const owl = $('.slider__activation__wrap').owlCarousel({
-    items: 1,
-    loop: true,
-    autoplay: true,
-    autoplayTimeout: 5000,
-    dots: true,
-    nav: true,
-    navText: [
-      `<div class='owl-prev'>←</div>`,
-      `<div class='owl-next'>→</div>`
-    ]
-  })
+  if (window.$ && typeof window.$.fn.owlCarousel === 'function') {
+    const $slider = window.$('.slider__activation__wrap')
 
-  $('.slider__activation__wrap').on('mouseenter', () => {
-    owl.trigger('stop.owl.autoplay')
-  })
+    const owl = $slider.owlCarousel({
+      items: 1,
+      loop: true,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      dots: true,
+      nav: true,
+      navText: [
+        `<div class='owl-prev'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
+          </svg>
+          Prev
+        </div>`,
+        `<div class='owl-next'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+          </svg>
+          Next
+        </div>`
+      ]
+    })
 
-  $('.slider__activation__wrap').on('mouseleave', () => {
-    owl.trigger('play.owl.autoplay', [5000])
-  })
+    $slider.on('mouseenter', () => {
+      owl.trigger('stop.owl.autoplay')
+    })
+
+    $slider.on('mouseleave', () => {
+      owl.trigger('play.owl.autoplay', [5000])
+    })
+  } else {
+    console.warn('jQuery 或 OwlCarousel 尚未載入')
+  }
 }
 
-// 當畫面載入完成後
 onMounted(async () => {
   await getBannerData()
-  await nextTick() // 確保畫面更新完成
+  await nextTick()
   initCarousel()
 })
 </script>

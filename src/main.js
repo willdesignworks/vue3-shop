@@ -13,5 +13,8 @@ import "./assets/css/custom.css";
 import "./assets/css/style_will.css";
 
 import App from "./App.vue";
+import router from "./router"; // router路由
 
-createApp(App).mount("#app");
+const app = createApp(App);
+app.use(router); // router路由
+app.mount("#app");
