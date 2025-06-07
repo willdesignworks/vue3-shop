@@ -4,7 +4,7 @@
     <Loading :isLoading="isLoading" />
 
     <!-- FrontProductModal 組件 -->
-    <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
+    <FrontProductModal :product="selectedProduct" :show="isModalOpen" @close="closeProductModal"
       @add-to-cart="addToCart" />
 
     <!-- HomeBanner 組件 -->
@@ -104,7 +104,8 @@ import { useCartStore } from '../stores/cartStore'; // 狀態管理器
 const products = ref([]);
 const isLoading = ref(false);
 const selectedCategory = ref('*');
-const selectedProduct = ref({});
+const isModalOpen = ref(false) // Modal
+const selectedProduct = ref(null) // Modal
 const messageStore = useMessageStore() // 提示框
 
 // 路由
@@ -177,12 +178,14 @@ const addToCart = async (product) => {
 
 // Modal-開啟
 const openProductModal = (product) => {
-  selectedProduct.value = product;
-};
+  selectedProduct.value = product
+  isModalOpen.value = true
+}
 // Modal-關閉
 const closeProductModal = () => {
-  selectedProduct.value = null;
-};
+  isModalOpen.value = false
+  selectedProduct.value = null
+}
 
 // 類別篩選
 const handleFilter = (category) => {
