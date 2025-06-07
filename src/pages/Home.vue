@@ -16,8 +16,8 @@
             <div class="col-md-12">
               <div class="product__menu">
                 <button @click="handleFilter('*')" :class="{ 'is-checked': selectedCategory === '*' }">所有</button>
-                <button @click="handleFilter('衣服')" :class="{ 'is-checked': selectedCategory === '衣服' }">衣服</button>
-                <button @click="handleFilter('裤子')" :class="{ 'is-checked': selectedCategory === '裤子' }">裤子</button>
+                <button @click="handleFilter('服飾')" :class="{ 'is-checked': selectedCategory === '服飾' }">服飾</button>
+                <button @click="handleFilter('褲子')" :class="{ 'is-checked': selectedCategory === '褲子' }">褲子</button>
                 <button @click="handleFilter('配件')" :class="{ 'is-checked': selectedCategory === '配件' }">配件</button>
               </div>
             </div>
