@@ -76,16 +76,14 @@ const props = defineProps({
   product: Object,
 })
 
-const emit = defineEmits(['close', 'add-to-cart'])
+const emit = defineEmits(['close', 'add-to-cart', 'open-cart'])
 
 const qty = ref(1)
 
 const handleAddToCart = () => {
   emit('add-to-cart', { ...props.product, qty: qty.value })
-}
-
-const close = () => {
-  emit('close')
+  emit('close')        // 關閉 modal
+  emit('open-cart')    // 開啟購物車 OffsetWrapper
 }
 </script>
 

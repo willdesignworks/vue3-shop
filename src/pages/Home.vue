@@ -4,7 +4,7 @@
 
     <!-- v-if 控制 Modal 的出現 -->
     <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
-      @add-to-cart="addToCart" />
+      @add-to-cart="addToCart" @open-cart="openCartSidebar" />
 
     <HomeBanner />
 
@@ -150,6 +150,10 @@ const openProductModal = (product) => {
 const closeProductModal = () => {
   selectedProduct.value = null;
 };
+
+const openCartSidebar = () => {
+  cartStore.isCartOpen = true // 如果你用 pinia 控制購物車開關，這裡打開
+}
 
 const handleFilter = (category) => {
   selectedCategory.value = category;
