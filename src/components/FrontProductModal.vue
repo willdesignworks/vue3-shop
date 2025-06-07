@@ -24,7 +24,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { Modal } from 'bootstrap'
-import { useCartStore } from '@/stores/cartStore'
+import { useCartStore } from '../stores/cartStore'
 
 const props = defineProps({
   product: Object,
