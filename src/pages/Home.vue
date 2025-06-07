@@ -124,7 +124,7 @@ const addToCart = async (product) => {
 
     messageStore.setMessage({
       title: '加入成功',
-      text: '已加入購物車',
+      text: '商品已加入購物車',
       type: 'success'
     })
     cartStore.getCart()
