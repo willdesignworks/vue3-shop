@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true" ref="modalRef">
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true" ref="modalRef" v-show="show">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
