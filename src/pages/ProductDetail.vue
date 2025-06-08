@@ -38,15 +38,17 @@
             </div>
 
             <div class="col-6">
-              <button class="btn" :class="isAddedToCart ? 'btn-secondary' : 'btn-dark'"
-                :disabled="isAdding || isAddedToCart" @click="addToCart">
+              <button class="btn text-nowrap btn btn-dark w-100 py-2"
+                :class="isAddedToCart ? 'btn-secondary' : 'btn-dark'" :disabled="isAdding || isAddedToCart"
+                @click="addToCart">
                 {{ isAddedToCart ? '已加入購物車' : '加入購物車' }}
               </button>
             </div>
 
             <div class="col-6">
-              <button class="btn" :class="isAddedToCart ? 'btn-secondary' : 'btn-org'"
-                :disabled="isAdding || isAddedToCart" @click="buyNow">
+              <button class="btn text-nowrap btn btn-org w-100 py-2"
+                :class="isAddedToCart ? 'btn-secondary' : 'btn-org'" :disabled="isAdding || isAddedToCart"
+                @click="buyNow">
                 {{ isAddedToCart ? '已經購買' : '立即購買' }}
               </button>
             </div>
@@ -56,8 +58,13 @@
             <h5>送貨方式</h5>
             <ul>
               <li>7-11 取貨付款(3-5天)</li>
+              <li>7-11 純取貨(3-5天)</li>
+              <li>全家 取貨付款(3-5天)</li>
+              <li>全家 純取貨(3-5天)</li>
               <li>新竹物流 運費NT130 (約3-5天)</li>
-              <li>順豐快遞(香港/澳門/大陸)</li>
+              <li>順豐快遞(中國大陸)(3-5天)</li>
+              <li>順豐快遞(香港)(3-5天)</li>
+              <li>順豐快遞(澳門)(3-5天)</li>
             </ul>
           </div>
         </div>
@@ -151,10 +158,14 @@ const decreaseQty = () => { if (qty.value > 1) qty.value -= 1; };
 onMounted(() => {
   window.scrollTo(0, 0);
   getProduct(route.params.id);
+  isAddedToCart.value = false;
+  qty.value = 1;
 });
 
 watch(() => route.params.id, (id) => {
   getProduct(id);
+  isAddedToCart.value = false; // 每次切換商品時要重設狀態
+  qty.value = 1;               // 重設數量
 });
 </script>
 
