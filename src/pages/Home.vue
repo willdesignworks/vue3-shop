@@ -81,7 +81,6 @@ import axios from 'axios';
 import Loading from '../components/Loading.vue';
 import FrontProductModal from '../components/FrontProductModal.vue';
 import HomeBanner from '../components/HomeBanner.vue';
-import OffsetWrapper from '../components/OffsetWrapper.vue';
 
 import { useMessageStore } from '../stores/messageStore';
 import { useCartStore } from '../stores/cartStore';
