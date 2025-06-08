@@ -5,7 +5,7 @@
     <!-- 黑色背景 -->
     <div class="body__overlay" :class="{ 'is-visible': isCartOpen }" @click="toggleCart(false)"></div>
 
-    <!-- 購物車清單區塊 -->
+    <!-- 購物車側邊欄 -->
     <OffsetWrapper :isCartOpen="isCartOpen" :cartData="cartData" @close="toggleCart(false)" @refresh-cart="getCart" />
 
     <!-- 主內容區 -->

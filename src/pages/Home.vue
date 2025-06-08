@@ -6,9 +6,6 @@
     <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
       @add-to-cart="addToCart" @open-cart="openCartSidebar" />
 
-    <!-- 購物車側邊欄 -->
-    <OffsetWrapper v-if="cartStore.isCartOpen" @close="closeCartSidebar" />
-
     <HomeBanner />
 
     <!-- 商品區域 -->
