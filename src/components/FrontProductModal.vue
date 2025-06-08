@@ -126,38 +126,41 @@ const handleAddToCart = async () => {
       product_id: props.product.id,
       qty: qty.value
     }
-  }
+  };
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL
-    const apiPath = import.meta.env.VITE_API_PATH
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiPath = import.meta.env.VITE_API_PATH;
 
-    const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
+    await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload);
 
-    // 顯示成功訊息
-    messageStore.setMessage({
+    // 成功訊息（多筆訊息格式）
+    messageStore.addMessage({
       title: '加入成功',
       text: '商品已加入購物車',
       type: 'success'
-    })
+    });
 
     // 呼叫父層：更新購物車資料
-    await props.getCart?.();
+    if (typeof props.getCart === 'function') {
+      await props.getCart();
+    }
 
-    // 呼叫父層：開啟購物車 OffsetWrapper.vue
+    // 呼叫父層：開啟購物車側邊欄 OffsetWrapper.vue
     props.openCartSidebar?.();
 
-    // 關閉 Modal
+    // 關閉 modal
     emit('close');
 
   } catch (error) {
-    console.error(error)
+    console.error(error);
+
     // 錯誤訊息
-    messageStore.setMessage({
+    messageStore.addMessage({
       title: '加入失敗',
       text: '請稍後再試',
       type: 'danger'
-    })
+    });
   }
 }
 </script>
