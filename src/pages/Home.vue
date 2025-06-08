@@ -127,9 +127,8 @@ const addToCart = async (product) => {
     const apiPath = import.meta.env.VITE_API_PATH
     await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data)
 
-    selectedProduct.value = null // 關閉 Modal
-    await props.getCart() // 更新購物車內容
-    props.openCartSidebar() // 顯示 OffsetWrapper（購物車側欄）
+    await props.getCart() // 更新購物車資料
+    router.push('/cart')  // 跳轉到 Cart 頁面
   } catch (error) {
     console.error('加入購物車失敗', error)
   } finally {
