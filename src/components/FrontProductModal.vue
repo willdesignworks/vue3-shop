@@ -7,7 +7,6 @@
           <div class="modal-header d-flex justify-content-between">
             <h5 class="modal-title">產品資訊</h5>
             <button type="button" class="btn-close" @click="$emit('close')">
-              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
@@ -102,7 +101,6 @@ const handleAddToCart = async () => {
     props.getCart?.()
     emit('open-cart')
     emit('close')
-    emit('close');
   } catch (error) {
     console.error(error);
     messageStore.addMessage({
