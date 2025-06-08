@@ -76,9 +76,12 @@
 </template>
 
 <script setup>
+// 引入必要功能
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+
+// 引入元件
 import Loading from '../components/Loading.vue';
 import Carousel from '../components/Carousel.vue';
 import RelatedNavbar from '../components/RelatedNavbar.vue';
