@@ -1,25 +1,24 @@
 <template>
-  <Teleport to="body">
-    <div class="toast-container position-fixed" style="top: 60px; right: 20px; z-index: 9999" v-if="show">
-      <div class="toast show text-white" :class="bgClass" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header text-white" :class="bgClass">
-          <strong class="me-auto">{{ message.title }}</strong>
-          <button type="button" class="btn-close btn-close-white ms-2" @click="messageStore.clearMessage"></button>
-        </div>
-        <div class="toast-body">
-          {{ message.text }}
-        </div>
+  <div class="toast-container position-fixed" style="top: 50px; right: 15px; z-index: 999999">
+    <div v-for="msg in messages" :key="msg.id" class="toast show" role="alert" aria-live="assertive" aria-atomic="true"
+      data-delay="3000">
+      <div :class="`toast-header text-white bg-${msg.type}`">
+        <strong class="me-auto">{{ msg.title }}</strong>
+        <button type="button" class="btn-close" @click="removeMessage(msg.id)" aria-label="Close" />
       </div>
+      <div class="toast-body">{{ msg.text }}</div>
     </div>
-  </Teleport>
+  </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useMessageStore } from '../stores/messageStore'
 
 const messageStore = useMessageStore()
-const message = computed(() => messageStore.message)
-const show = computed(() => messageStore.show)
-const bgClass = computed(() => `bg-${message.value.type || 'secondary'}`)
+const { messages } = storeToRefs(messageStore)
+
+const removeMessage = (id) => {
+  messageStore.removeMessage(id)
+}
 </script>
