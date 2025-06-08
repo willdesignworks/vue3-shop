@@ -3,8 +3,8 @@
     <Loading :isLoading="isLoading" />
 
     <!-- v-if 控制 Modal 的出現 -->
-    <FrontProductModal v-if="selectedProduct" :product="selectedProduct" :getCart="getCart"
-      :openCartSidebar="() => toggleCart(true)" @open-cart="toggleCart(true)" @close="selectedProduct = null" />
+    <FrontProductModal v-if="selectedProduct" :product="selectedProduct" :getCart="props.getCart"
+      :openCartSidebar="props.openCartSidebar" @open-cart="props.openCartSidebar()" @close="selectedProduct = null" />
 
     <HomeBanner />
 

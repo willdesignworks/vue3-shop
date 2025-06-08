@@ -143,13 +143,13 @@ const handleAddToCart = async () => {
     })
 
     // 呼叫父層：更新購物車資料
-    props.getCart?.()
-
-    // 關閉 Modal
-    emit('close')
+    await props.getCart?.();
 
     // 呼叫父層：開啟購物車 OffsetWrapper.vue
-    emit('open-cart')
+    props.openCartSidebar?.();
+
+    // 關閉 Modal
+    emit('close');
 
   } catch (error) {
     console.error(error)
