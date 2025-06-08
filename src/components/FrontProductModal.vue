@@ -6,7 +6,7 @@
         <div class="modal-content">
           <div class="modal-header d-flex justify-content-between">
             <h5 class="modal-title">產品資訊</h5>
-            <button type="button" class="close" @click="close">
+            <button type="button" class="btn-close" @click="$emit('close')">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -64,49 +64,53 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useMessageStore } from '../stores/messageStore'
+// 接收父層傳入的資料與方法
+import { ref } from 'vue';
+import axios from 'axios';
+import { useMessageStore } from '../stores/messageStore';
 
 const props = defineProps({
   product: Object,
   getCart: Function,
-  openCartSidebar: Function,
-})
-const emit = defineEmits(['close', 'add-to-cart', 'open-cart'])
+  openCartSidebar: Function
+});
+const emit = defineEmits(['close']);
 
-const qty = ref(1)
-const messageStore = useMessageStore()
+const messageStore = useMessageStore();
+const qty = ref(1);
 
-const increaseQty = () => qty.value++
-const decreaseQty = () => { if (qty.value > 1) qty.value-- }
-
+// 點擊加入購物車
 const handleAddToCart = async () => {
-  const apiUrl = import.meta.env.VITE_API_URL
-  const apiPath = import.meta.env.VITE_API_PATH
   const payload = {
     data: {
       product_id: props.product.id,
-      qty: qty.value,
-    },
-  }
+      qty: qty.value
+    }
+  };
 
   try {
-    const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
-    messageStore.addMessage(res.data) // 顯示訊息
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiPath = import.meta.env.VITE_API_PATH;
+    const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload);
 
-    props.getCart?.()
-    emit('add-to-cart', { ...props.product, qty: qty.value })
-    emit('close')       // 關閉 modal
-    emit('open-cart')   // 開啟 OffsetWrapper (父層)
+    messageStore.addMessage({
+      title: '加入成功',
+      text: '商品已加入購物車',
+      type: 'success'
+    });
+
+    props.getCart();
+    props.openCartSidebar();
+    emit('close');
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    messageStore.addMessage({
+      title: '加入失敗',
+      text: '請稍後再試',
+      type: 'danger'
+    });
   }
-}
-
-const close = () => {
-  emit('close')
-}
+};
 </script>
 
 <style scoped>
