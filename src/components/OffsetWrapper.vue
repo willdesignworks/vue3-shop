@@ -54,6 +54,18 @@
                 <RouterLink to="/checkout">結帳</RouterLink>
               </li>
             </ul>
+            <ul class="shopping__btn">
+              <li>
+                <RouterLink to="/cart" @click="handleClose">
+                  查看購物車
+                </RouterLink>
+              </li>
+              <li class="shp__checkout">
+                <RouterLink to="/checkout" @click="handleClose">
+                  送出訂單
+                </RouterLink>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
