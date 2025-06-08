@@ -113,6 +113,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 // 引入元件
+import { useMessageStore } from '../stores/messageStore' // 引入 Pinia 訊息
 import RelatedProducts from '../components/RelatedProducts.vue'
 import Loading from '../components/Loading.vue'
 
@@ -125,22 +126,36 @@ const props = defineProps({
 const isLoading = ref(false)
 const loadingItems = ref([])
 
-// 移除商品功能
+const messageStore = useMessageStore() // ✅ Pinia store 實例
+
+// 移除-購物車項目
 const removeCartItem = async (id) => {
   try {
     isLoading.value = true
     const apiUrl = import.meta.env.VITE_API_URL
     const apiPath = import.meta.env.VITE_API_PATH
     await axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
+
+    messageStore.setMessage({
+      title: '成功',
+      text: '商品已從購物車移除',
+      type: 'success'
+    })
+
     await props.getCart()
   } catch (error) {
-    console.error('刪除商品失敗', error)
+    console.error('移除失敗:', error)
+    messageStore.setMessage({
+      title: '錯誤',
+      text: '刪除失敗，請稍後再試',
+      type: 'danger'
+    })
   } finally {
     isLoading.value = false
   }
 }
 
-// 更新購物車品項數量
+// 更新-購物車品項數量
 const updateCartItem = async (item, qty) => {
   loadingItems.value.push(item.id)
   const data = {
