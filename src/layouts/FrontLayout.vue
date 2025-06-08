@@ -11,7 +11,7 @@
     <!-- 主內容區 -->
     <router-view v-slot="{ Component }">
       <KeepAlive>
-        <component :is="Component" :getCart="getCart" :products="products" />
+        <component :is="Component" :getCart="getCart" :products="products" :openCartSidebar="() => toggleCart(true)" />
       </KeepAlive>
     </router-view>
 
@@ -28,13 +28,11 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-// 組件
 import Navbar from '../components/Navbar.vue'
 import OffsetWrapper from '../components/OffsetWrapper.vue'
 import Footer from '../components/Footer.vue'
 import axios from 'axios'
 
-// 狀態
 const cartData = ref({})
 const products = ref([])
 const isCartOpen = ref(false)
