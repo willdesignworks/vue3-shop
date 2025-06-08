@@ -86,8 +86,8 @@ import HomeBanner from '../components/HomeBanner.vue'
 
 // 從父層 FrontLayout 傳入 getCart() 與 openCartSidebar()，取代 Pinia
 const props = defineProps({
-  getCart: Function,           // 取得購物車內容
-  openCartSidebar: Function    // 開啟購物車側欄
+  getCart: Function, // 取得購物車內容
+  openCartSidebar: Function // 開啟購物車側欄
 })
 
 // 狀態資料
@@ -128,6 +128,10 @@ const addToCart = async (product) => {
     await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data)
 
     await props.getCart() // 更新購物車資料
+    //防呆判斷，以避免錯誤
+    if (typeof props.getCart === 'function') {
+      await props.getCart()
+    }
     router.push('/cart')  // 跳轉到 Cart 頁面
   } catch (error) {
     console.error('加入購物車失敗', error)

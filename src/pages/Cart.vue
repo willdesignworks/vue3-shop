@@ -120,7 +120,7 @@ import Loading from '../components/Loading.vue'
 // 接收來自 FrontLayout 的 props：購物車資料與更新方法
 const props = defineProps({
   cartData: Object,
-  getCart: Function
+  getCart: Function // 取得購物車內容
 })
 
 const isLoading = ref(false)
@@ -143,6 +143,10 @@ const removeCartItem = async (id) => {
     })
 
     await props.getCart()
+    //防呆判斷，以避免錯誤
+    if (typeof props.getCart === 'function') {
+      await props.getCart()
+    }
   } catch (error) {
     console.error('移除失敗:', error)
     messageStore.addMessage({
@@ -170,6 +174,10 @@ const updateCartItem = async (item, qty) => {
     const apiPath = import.meta.env.VITE_API_PATH
     await axios.put(`${apiUrl}/v2/api/${apiPath}/cart/${item.id}`, data)
     await props.getCart()
+    //防呆判斷，以避免錯誤
+    if (typeof props.getCart === 'function') {
+      await props.getCart()
+    }
   } catch (err) {
     console.error('更新數量失敗', err)
   } finally {
