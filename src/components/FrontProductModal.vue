@@ -94,7 +94,9 @@ import { ref } from 'vue';
 import axios from 'axios';
 
 // 引入元件
-import { useMessageStore } from '../stores/messageStore';
+import { useMessageStore } from '../stores/messageStore'
+// === 使用 Pinia 的訊息 store 顯示加入成功訊息 ===
+const messageStore = useMessageStore()
 
 // 接收 props 參數（由父元件傳入）===
 const props = defineProps({
@@ -105,9 +107,6 @@ const props = defineProps({
 
 // === emit 可觸發 close / open-cart 事件給父層 ===
 const emit = defineEmits(['close', 'open-cart'])
-
-// === 使用 Pinia 的訊息 store 顯示加入成功訊息 ===
-const messageStore = useMessageStore()
 
 // 數量狀態（預設 1）===
 const qty = ref(1)
@@ -136,7 +135,7 @@ const handleAddToCart = async () => {
     const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
 
     // 顯示成功訊息
-    messageStore.addMessage({
+    messageStore.setMessage({
       title: '加入成功',
       text: '商品已加入購物車',
       type: 'success'
@@ -153,7 +152,8 @@ const handleAddToCart = async () => {
 
   } catch (error) {
     console.error(error)
-    messageStore.addMessage({
+    // 錯誤訊息
+    messageStore.setMessage({
       title: '加入失敗',
       text: '請稍後再試',
       type: 'danger'
