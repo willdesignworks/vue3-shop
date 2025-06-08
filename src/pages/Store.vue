@@ -47,7 +47,8 @@
                 </div>
               </div>
               <div class="googleMap col-md-12 col-lg-6 col-sm-12">
-                <iframe :src="store.mapSrc" width="400" height="300" loading="lazy" title="googleMap"></iframe>
+                <iframe :src="store.mapSrc" width="400" height="300" loading="lazy" title="googleMap"
+                  sandbox="allow-scripts allow-same-origin"></iframe>
               </div>
             </div>
           </div>
@@ -59,6 +60,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
+import ScrollReveal from 'scrollreveal'
 
 // 門市資訊資料
 const stores = [
@@ -85,15 +87,25 @@ const stores = [
   },
 ]
 
+// 讓這些 props 傳入不會報警告，因為沒使用
+defineProps({
+  cartData: Object,
+  getCart: Function,
+  openCartSidebar: Function,
+});
+
 // ScrollReveal 效果
 onMounted(() => {
-  const sr = ScrollReveal()
-  sr.reveal('.foo', {
-    duration: 1000,
-    delay: 150,
-    distance: '500px',
-    scale: 1,
-    easing: 'ease',
-  })
+  setTimeout(() => {
+    const sr = ScrollReveal()
+    sr.reveal('.foo', {
+      duration: 1000,
+      delay: 150,
+      distance: '50px',
+      origin: 'bottom',
+      easing: 'ease-in-out',
+      reset: true,
+    })
+  }, 100)
 })
 </script>

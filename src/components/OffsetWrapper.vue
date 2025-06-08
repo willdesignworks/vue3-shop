@@ -75,7 +75,12 @@
 
 <script setup>
 //import { defineProps, defineEmits } from 'vue';
+// 引入必要功能
 import axios from 'axios';
+import { useMessageStore } from '../stores/messageStore'; // Pinia 的訊息框
+
+// 狀態
+const messageStore = useMessageStore(); // Pinia 的訊息框
 
 const props = defineProps({
   isCartOpen: Boolean,
@@ -93,9 +98,23 @@ const removeCartItem = async (id) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const apiPath = import.meta.env.VITE_API_PATH;
     await axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`);
+
+    // 成功-Pinia 的訊息框
+    messageStore.addMessage({
+      title: '已刪除',
+      text: '商品已從購物車中移除',
+      type: 'success'
+    });
+
     emit('refresh-cart');
   } catch (error) {
     console.error('刪除商品失敗', error);
+    // 錯誤-Pinia 的訊息框
+    messageStore.addMessage({
+      title: '錯誤',
+      text: '無法刪除商品，請稍後再試',
+      type: 'danger'
+    });
   }
 };
 </script>

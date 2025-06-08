@@ -2,7 +2,7 @@
   <!-- 若有選中的商品，才顯示 Modal -->
   <div v-if="product">
     <!-- Bootstrap 樣式的 Modal，並以自訂樣式覆蓋 -->
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);" @click.self="closeModal">
       <div class="modal-dialog modal__container" role="document">
         <div class="modal-content">
 
@@ -107,6 +107,10 @@ const props = defineProps({
 
 // === emit 可觸發 close / open-cart 事件給父層 ===
 const emit = defineEmits(['close', 'open-cart'])
+
+const closeModal = () => {
+  emit('close')
+}
 
 // 數量狀態（預設 1）===
 const qty = ref(1)

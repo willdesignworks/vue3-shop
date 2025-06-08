@@ -87,7 +87,7 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
-import { useMessageStore } from '../stores/messageStore';
+import { useMessageStore } from '../stores/messageStore'; // Pinia 的訊息框
 
 // 引入元件
 import Loading from '../components/Loading.vue';
@@ -111,7 +111,7 @@ const isLoading = ref(false);
 const isAdding = ref(false);
 const route = useRoute();
 const router = useRouter();
-const messageStore = useMessageStore();
+const messageStore = useMessageStore(); // Pinia 的訊息框
 
 const getProduct = async (id) => {
   isLoading.value = true;

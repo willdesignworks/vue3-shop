@@ -171,5 +171,10 @@
 </template>
 
 <script setup>
-
+// 讓這些 props 傳入不會報警告，因為沒使用
+defineProps({
+  cartData: Object,
+  getCart: Function,
+  openCartSidebar: Function,
+});
 </script>
