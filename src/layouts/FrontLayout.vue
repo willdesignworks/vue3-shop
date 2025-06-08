@@ -9,7 +9,8 @@
     <div class="body__overlay" :class="{ 'is-visible': isCartOpen }" @click="toggleCart(false)"></div>
 
     <!-- 側邊購物車，傳入 cartData 與開關狀態，並接收 @close 與 @refresh-cart 事件 -->
-    <OffsetWrapper :isCartOpen="isCartOpen" :cartData="cartData" @close="toggleCart(false)" @refresh-cart="getCart" />
+    <FrontProductModal v-if="selectedProduct" :product="selectedProduct" :getCart="getCart"
+      :openCartSidebar="() => toggleCart(true)" @open-cart="toggleCart(true)" @close="selectedProduct = null" />
 
     <!-- 主內容頁，使用 keep-alive 保持頁面狀態 -->
     <router-view v-slot="{ Component }">

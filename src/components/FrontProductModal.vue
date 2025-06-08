@@ -99,8 +99,9 @@ const handleAddToCart = async () => {
       type: 'success'
     });
 
-    props.getCart();
-    props.openCartSidebar();
+    props.getCart?.()
+    emit('open-cart')
+    emit('close')
     emit('close');
   } catch (error) {
     console.error(error);

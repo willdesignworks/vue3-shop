@@ -27,7 +27,7 @@
           <!-- 有商品 -->
           <div v-else>
             <div class="shp__cart__wrap">
-              <div class="shp__single__product" v-for="item in cartData.carts" :key="item.id">
+              <div class="shp__single__product" v-for="item in cartData?.carts" :key="item.id">
                 <div class="shp__pro__thumb">
                   <RouterLink to="/products">
                     <img :src="item.product.imageUrl" alt="product" />
@@ -61,11 +61,13 @@
 
 <script setup>
 defineProps({
-  isCartOpen: Boolean, // 控制側邊欄開關
-  cartData: Object     // 購物車資料
-})
+  isCartOpen: Boolean,
+  cartData: Object,
+});
 
-defineEmits(['close', 'remove-item']) // emit 事件：關閉、刪除商品
+const emit = defineEmits(['close', 'refresh-cart']);
+
+const handleClose = () => emit('close');
 </script>
 
 <style scoped>
