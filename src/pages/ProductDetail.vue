@@ -1,11 +1,11 @@
 <template>
   <Loading :isLoading="isLoading" />
 
-  <div class="cart-main-area bg__white">
+  <div class="cart-main-area bg__white" v-if="product.title">
     <div class="container ProductDetail">
       <div class="row align-items-center">
         <div class="col-md-7">
-          <Carousel :product="product" />
+          <Carousel v-if="product.imageUrl" :product="product" />
         </div>
         <div class="col-md-5">
           <!--<RelatedNavbar v-model:activeTab="activeTab" />-->
@@ -84,30 +84,34 @@
 
 <script setup>
 // 引入必要功能
-import { ref, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted, watch } from 'vue'
+import axios from 'axios'
+import { useRoute, useRouter } from 'vue-router'
+import { useMessageStore } from '../stores/messageStore';
+
 // 引入元件
 import Loading from '../components/Loading.vue';
 import Carousel from '../components/Carousel.vue';
 import RelatedNavbar from '../components/RelatedNavbar.vue';
 import RelatedProducts from '../components/RelatedProducts.vue';
-import { useMessageStore } from '../stores/messageStore';
 
-const route = useRoute();
-const router = useRouter();
-const messageStore = useMessageStore();
 
 // ✅ 接收父層傳入 getCart 方法
 const props = defineProps({
+  cartData: Object,
+  openCartSidebar: Function,
   getCart: Function
-});
+})
 
+// 狀態
 const product = ref({});
 const qty = ref(1);
 const isAddedToCart = ref(false);
 const isLoading = ref(false);
 const isAdding = ref(false);
+const route = useRoute();
+const router = useRouter();
+const messageStore = useMessageStore();
 
 const getProduct = async (id) => {
   isLoading.value = true;
@@ -148,9 +152,41 @@ const addToCart = async () => {
 };
 
 const buyNow = async () => {
-  await addToCart();
-  router.push('/cart');
-};
+  isAdding.value = true
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    const data = {
+      data: {
+        product_id: product.value.id,
+        qty: 1
+      }
+    }
+    await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data)
+
+    messageStore.addMessage({
+      title: '加入成功',
+      text: '商品已加入購物車',
+      type: 'success'
+    })
+
+    // ✅ 呼叫外部購物車刷新方法（如果有傳入）
+    if (typeof props.getCart === 'function') {
+      await props.getCart()
+    }
+
+    // ✅ 開啟 OffsetWrapper 側邊購物車（如果有傳入）
+    if (typeof props.openCartSidebar === 'function') {
+      props.openCartSidebar()
+    }
+
+    isAddedToCart.value = true
+  } catch (err) {
+    console.error('加入購物車失敗:', err)
+  } finally {
+    isAdding.value = false
+  }
+}
 
 const increaseQty = () => qty.value += 1;
 const decreaseQty = () => { if (qty.value > 1) qty.value -= 1; };
