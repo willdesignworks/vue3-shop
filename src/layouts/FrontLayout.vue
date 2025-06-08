@@ -52,8 +52,12 @@ const marginBottom = ref(0) // 控制頁尾 margin-bottom（避免被 footer 蓋
 const getCart = async () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiPath = import.meta.env.VITE_API_PATH
-  const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
-  cartData.value = res.data.data
+  try {
+    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
+    cartData.value = res.data.data
+  } catch (error) {
+    console.error('取得購物車失敗', error)
+  }
 }
 
 // 取得商品資料
@@ -91,9 +95,9 @@ const handleScroll = () => {
   生命周期：mounted
 -------------------------*/
 onMounted(() => {
-  getCart()              // 載入購物車資料
-  getProducts()          // 載入商品資料
-  updateFooterHeight()   // 更新頁尾距離
+  getCart() // 載入購物車資料
+  getProducts() // 載入商品資料
+  updateFooterHeight() // 更新頁尾距離
   window.addEventListener('resize', updateFooterHeight)
   window.addEventListener('scroll', handleScroll)
 })

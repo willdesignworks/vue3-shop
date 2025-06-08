@@ -8,7 +8,7 @@
           <Carousel :product="product" />
         </div>
         <div class="col-md-5">
-          <RelatedNavbar />
+          <!--<RelatedNavbar v-model:activeTab="activeTab" />-->
 
           <h2 class="fw-bold h1 mb-2">{{ product.title }}</h2>
           <p class="productpromotionstag mb-3">全店，NT4500免運費</p>
@@ -76,10 +76,11 @@
 </template>
 
 <script setup>
+// 引入必要功能
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-
+// 引入元件
 import Loading from '../components/Loading.vue';
 import Carousel from '../components/Carousel.vue';
 import RelatedNavbar from '../components/RelatedNavbar.vue';
