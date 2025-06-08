@@ -70,7 +70,7 @@ const getProducts = async () => {
 
 // 開關側邊購物車
 const toggleCart = (status = true) => {
-  isCartOpen.value = status
+  isCartOpen.value = typeof status === 'boolean' ? status : !isCartOpen.value
 }
 
 // 回到頁面頂部
