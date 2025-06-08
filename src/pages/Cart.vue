@@ -19,7 +19,7 @@
     <div class="cart-main-area ptb--120 bg__white">
       <div class="container">
         <div class="row">
-          <template v-if="cartStore.cartData?.carts?.length">
+          <template v-if="cartData?.carts?.length">
             <div class="col-md-12 col-sm-12 col-12">
               <div class="table-content table-responsive">
                 <table>
@@ -34,7 +34,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in cartStore.cartData.carts" :key="item.id">
+                    <tr v-for="item in cartData.carts" :key="item.id">
                       <td class="product-thumbnail">
                         <img :src="item.product.imageUrl" alt="product" />
                       </td>
@@ -49,7 +49,7 @@
                       <td class="product-subtotal">NT ${{ item.final_total }}</td>
                       <td class="product-remove">
                         <div class="remove__btn">
-                          <a href="#" @click.prevent="removeCartItem(item)">
+                          <a href="#" @click.prevent="removeCartItem(item.id)">
                             <i class="zmdi zmdi-close"></i>
                           </a>
                         </div>
@@ -71,7 +71,7 @@
                       <tbody>
                         <tr class="cart-subtotal">
                           <th>小計</th>
-                          <td>NT ${{ cartStore.cartData.final_total }}</td>
+                          <td>NT ${{ cartData.final_total }}</td>
                         </tr>
                         <tr class="shipping">
                           <th>運費</th>
@@ -79,7 +79,7 @@
                         </tr>
                         <tr class="order-total">
                           <th>總金額</th>
-                          <td><strong>NT ${{ cartStore.cartData.final_total }}</strong></td>
+                          <td><strong>NT ${{ cartData.final_total }}</strong></td>
                         </tr>
                       </tbody>
                     </table>
@@ -91,8 +91,6 @@
               </div>
             </div>
           </template>
-
-          <!-- 無資料時 -->
           <template v-else>
             <div class="col-md-10 col-sm-12 col-12 no-list">
               <div class="cartempty text-center">
@@ -110,45 +108,57 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useCartStore } from '../stores/cartStore'
-import { useMessageStore } from '../stores/messageStore'
+// 引入必要功能
+import { ref } from 'vue'
+import axios from 'axios'
 
-import Loading from '../components/Loading.vue'
+// 引入元件
 import RelatedProducts from '../components/RelatedProducts.vue'
+import Loading from '../components/Loading.vue'
 
-const cartStore = useCartStore()
-const messageStore = useMessageStore()
+// 接收來自 FrontLayout 的 props：購物車資料與更新方法
+const props = defineProps({
+  cartData: Object,
+  getCart: Function
+})
 
 const isLoading = ref(false)
 const loadingItems = ref([])
 
-onMounted(() => {
-  cartStore.getCart()
-})
-
-const removeCartItem = async (item) => {
+// 移除商品功能
+const removeCartItem = async (id) => {
   try {
     isLoading.value = true
-    const res = await cartStore.removeCartItem(item)
-    messageStore.addMessage(res.data)
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    await axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
+    await props.getCart()
   } catch (error) {
-    messageStore.addMessage(error.response.data)
+    console.error('刪除商品失敗', error)
   } finally {
     isLoading.value = false
   }
 }
 
+// 更新購物車品項數量
 const updateCartItem = async (item, qty) => {
   loadingItems.value.push(item.id)
+  const data = {
+    data: {
+      product_id: item.product_id,
+      qty
+    }
+  }
   try {
     isLoading.value = true
-    const res = await cartStore.updateCartItem(item, qty)
-    messageStore.addMessage(res.data)
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    await axios.put(`${apiUrl}/v2/api/${apiPath}/cart/${item.id}`, data)
+    await props.getCart()
   } catch (err) {
-    messageStore.addMessage(err.response.data)
+    console.error('更新數量失敗', err)
   } finally {
-    loadingItems.value = loadingItems.value.filter((id) => id !== item.id)
+    loadingItems.value = loadingItems.value.filter((i) => i !== item.id)
     isLoading.value = false
   }
 }
