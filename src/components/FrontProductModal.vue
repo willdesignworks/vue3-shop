@@ -14,7 +14,7 @@
             <div class="modal-product">
               <div class="product-images">
                 <div class="main-image images">
-                  <img :src="product.imageUrl" alt="product" />
+                  <img :src="product.imageUrl" alt="big images" />
                 </div>
               </div>
               <div class="product-info">
@@ -25,18 +25,15 @@
                   </div>
                 </div>
                 <div class="quick-desc" v-html="product.content"></div>
-
                 <div class="social-sharing">
                   <div class="widget widget_socialsharing_widget">
                     <h3 class="widget-title-modal">產品數量</h3>
                   </div>
                 </div>
-
-                <!-- 數量控制 -->
                 <div class="input-group my-3 bg-light rounded">
                   <div class="input-group-prepend">
-                    <button class="btn btn-outline-dark border-0 py-2" type="button"
-                      @click="qty = qty === 1 ? 1 : qty - 1">
+                    <button class="btn btn-outline-dark border-0 py-2" type="button" id="button-addon1"
+                      @click="decreaseQty">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 11H5V13H19V11Z"></path>
                       </svg>
@@ -45,29 +42,23 @@
                   <input type="text" readonly class="form-control border-0 text-center my-auto shadow-none bg-light"
                     :value="qty" />
                   <div class="input-group-prepend">
-                    <button class="btn btn-outline-dark border-0 py-2" type="button" @click="qty++">
+                    <button class="btn btn-outline-dark border-0 py-2" type="button" id="button-addon2"
+                      @click="increaseQty">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
                       </svg>
                     </button>
                   </div>
                 </div>
-
-                <!-- 加入購物車按鈕 -->
                 <div class="addtocart-btn">
-                  <button class="btn btn-dark border-0 py-2 w-100" @click="addToCart">
-                    加入購物車
-                  </button>
+                  <button class="btn btn-dark border-0 py-2 w-100" @click="handleAddToCart">加入購物車</button>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- 自製遮罩 -->
     <div class="modal-backdrop fade show"></div>
   </div>
 </template>
@@ -77,58 +68,50 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useMessageStore } from '../stores/messageStore'
 
-// Props 與 Emits
 const props = defineProps({
   product: Object,
   getCart: Function,
-  setCartOpen: Function
+  openCartSidebar: Function,
 })
 const emit = defineEmits(['close'])
 
-// 狀態
 const qty = ref(1)
 const messageStore = useMessageStore()
 
-// 加入購物車 API
-const addToCart = async () => {
+const increaseQty = () => qty.value++
+const decreaseQty = () => { if (qty.value > 1) qty.value-- }
+
+const handleAddToCart = async () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiPath = import.meta.env.VITE_API_PATH
-
+  const payload = {
+    data: {
+      product_id: props.product.id,
+      qty: qty.value,
+    },
+  }
   try {
-    const payload = {
-      data: {
-        product_id: props.product.id,
-        qty: qty.value
-      }
-    }
-
     const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
-
-    // 顯示成功訊息
-    messageStore.setMessage({
-      title: '成功加入購物車',
-      text: res.data.message,
-      type: 'success'
-    })
-
-    // 關閉 Modal
+    messageStore.addMessage(res.data)
+    props.getCart()
     emit('close')
-
-    // 更新購物車內容 + 顯示 OffsetWrapper
-    props.getCart?.()
-    props.setCartOpen?.(true)
-
-  } catch (err) {
-    messageStore.setMessage({
-      title: '加入購物車失敗',
-      text: err?.response?.data?.message || '發生錯誤',
-      type: 'danger'
-    })
+    props.openCartSidebar()
+  } catch (error) {
+    console.error(error)
   }
 }
 
-// 關閉 modal
 const close = () => {
   emit('close')
 }
 </script>
+
+<style scoped>
+.modal-backdrop {
+  z-index: 1040;
+}
+
+.modal {
+  z-index: 1050;
+}
+</style>
