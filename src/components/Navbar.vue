@@ -38,10 +38,10 @@
                   <span class="ti-user"></span>
                 </router-link>
               </li>
-              <li class="cart__menu position-relative" @click="$emit('toggleCart')">
+              <li class="cart__menu position-relative" @click="openCartSidebar">
                 <span class="ti-shopping-cart"></span>
-                <span v-if="cartData?.carts?.length > 0" class="bootstarplength">
-                  {{ cartData.carts.length }}
+                <span v-if="cartStore.cartData?.carts?.length > 0" class="bootstarplength">
+                  {{ cartStore.cartData.carts.length }}
                 </span>
               </li>
             </ul>
@@ -54,9 +54,11 @@
 </template>
 
 <script setup>
-defineProps({
-  cartData: Object
-})
+import { useCartStore } from '../stores/cartStore'
 
-const emit = defineEmits(['toggleCart'])
+const cartStore = useCartStore()
+
+const openCartSidebar = () => {
+  cartStore.openCartSidebar()
+}
 </script>
