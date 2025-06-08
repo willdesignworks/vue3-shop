@@ -49,7 +49,7 @@
                       <td class="product-subtotal">NT ${{ item.final_total }}</td>
                       <td class="product-remove">
                         <div class="remove__btn">
-                          <a href="#" @click.prevent="removeCartItem(item.id)">
+                          <a href="#" @click.prevent="removeCartItem(item)">
                             <i class="zmdi zmdi-close"></i>
                           </a>
                         </div>
@@ -91,6 +91,8 @@
               </div>
             </div>
           </template>
+
+          <!-- 無資料時 -->
           <template v-else>
             <div class="col-md-10 col-sm-12 col-12 no-list">
               <div class="cartempty text-center">
@@ -108,48 +110,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useCartStore } from '../stores/cartStore';
-import { useMessageStore } from '../stores/messageStore';
-import Loading from '../components/Loading.vue';
-import RelatedProducts from '../components/RelatedProducts.vue';
+import { ref, onMounted } from 'vue'
+import { useCartStore } from '../stores/cartStore'
+import { useMessageStore } from '../stores/messageStore'
 
-const cartStore = useCartStore();
-const messageStore = useMessageStore();
-const isLoading = ref(false);
-const loadingItems = ref([]);
+import Loading from '../components/Loading.vue'
+import RelatedProducts from '../components/RelatedProducts.vue'
 
-const removeCartItem = async (id) => {
+const cartStore = useCartStore()
+const messageStore = useMessageStore()
+
+const isLoading = ref(false)
+const loadingItems = ref([])
+
+onMounted(() => {
+  cartStore.getCart()
+})
+
+const removeCartItem = async (item) => {
   try {
-    isLoading.value = true;
-    const res = await cartStore.removeCartItem(id);
-    messageStore.addMessage(res.data);
-    await cartStore.getCart();
+    isLoading.value = true
+    const res = await cartStore.removeCartItem(item)
+    messageStore.addMessage(res.data)
   } catch (error) {
-    messageStore.addMessage(error.response.data);
+    messageStore.addMessage(error.response.data)
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 const updateCartItem = async (item, qty) => {
-  loadingItems.value.push(item.id);
-  const data = {
-    product_id: item.product_id,
-    qty: qty
-  };
+  loadingItems.value.push(item.id)
   try {
-    isLoading.value = true;
-    const res = await cartStore.updateCartItem(item.id, data);
-    messageStore.addMessage(res.data);
-    await cartStore.getCart();
+    isLoading.value = true
+    const res = await cartStore.updateCartItem(item, qty)
+    messageStore.addMessage(res.data)
   } catch (err) {
-    messageStore.addMessage(err.response.data);
+    messageStore.addMessage(err.response.data)
   } finally {
-    loadingItems.value = loadingItems.value.filter((i) => i !== item.id);
-    isLoading.value = false;
+    loadingItems.value = loadingItems.value.filter((id) => id !== item.id)
+    isLoading.value = false
   }
-};
+}
 </script>
 
 <style scoped>
