@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import FrontLayout from "../layouts/FrontLayout.vue";
 import Home from "../pages/Home.vue";
 import Products from "../pages/Products.vue";
+import Cart from "../pages/Cart.vue";
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
         path: "product/:id",
         name: "product",
         component: Products,
+      },
+      {
+        path: "cart",
+        name: "cart",
+        component: Cart,
       },
     ],
   },

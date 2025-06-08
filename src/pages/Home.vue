@@ -109,34 +109,38 @@ const getProducts = async () => {
 };
 
 const addToCart = async (product) => {
-  const apiUrl = import.meta.env.VITE_API_URL
-  const apiPath = import.meta.env.VITE_API_PATH
-  const payload = {
+  const data = {
     data: {
       product_id: product.id,
-      qty: product.qty || 1, // 預設數量為 1（避免 undefined）
+      qty: 1,
     },
-  }
-
+  };
   try {
-    isLoading.value = true
-    const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
+    isLoading.value = true;
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiPath = import.meta.env.VITE_API_PATH;
+    const response = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data);
 
-    // ✅ 使用 Pinia 顯示訊息
-    messageStore.addMessage(res.data)
+    messageStore.setMessage({
+      title: '成功加入購物車',
+      text: '商品已加入購物車',
+      type: 'success'
+    });
 
-    // ✅ 更新購物車內容
-    await cartStore.getCart()
+    cartStore.getCart();
+    closeProductModal();
+    window.scrollTo(0, 0);
+    router.push('/cart');
 
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.error(error);
     messageStore.setMessage({
       title: '加入購物車失敗',
-      text: '請稍後再試',
+      text: '商品無法加入購物車',
       type: 'danger'
-    })
+    });
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 // Modal
