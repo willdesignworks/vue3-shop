@@ -4,7 +4,7 @@
 
     <!-- v-if 控制 Modal 的出現 -->
     <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
-      @add-to-cart="addToCart" @open-cart="openCartSidebar" />
+      @add-to-cart="addToCart" @open-cart="props.openCartSidebar" />
 
     <HomeBanner />
 
@@ -74,101 +74,93 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+// 引入必要功能
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-import Loading from '../components/Loading.vue';
-import FrontProductModal from '../components/FrontProductModal.vue';
-import HomeBanner from '../components/HomeBanner.vue';
+// 引入元件
+import Loading from '../components/Loading.vue'
+import FrontProductModal from '../components/FrontProductModal.vue'
+import HomeBanner from '../components/HomeBanner.vue'
 
-import { useMessageStore } from '../stores/messageStore';
-import { useCartStore } from '../stores/cartStore';
+// 從父層 FrontLayout 傳入 getCart() 與 openCartSidebar()，取代 Pinia
+const props = defineProps({
+  getCart: Function,           // 取得購物車內容
+  openCartSidebar: Function    // 開啟購物車側欄
+})
 
-const products = ref([]);
-const isLoading = ref(false);
-const selectedCategory = ref('*');
-const selectedProduct = ref(null);
+// 狀態資料
+const products = ref([])               // 所有商品列表
+const isLoading = ref(false)           // 載入狀態
+const selectedCategory = ref('*')      // 當前選擇分類
+const selectedProduct = ref(null)      // 當前點選商品（Modal 用）
 
-const messageStore = useMessageStore();
-const cartStore = useCartStore();
-const router = useRouter();
+const router = useRouter()
 
+// 取得商品資料
 const getProducts = async () => {
   try {
-    isLoading.value = true;
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const apiPath = import.meta.env.VITE_API_PATH;
-    const response = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`);
-    products.value = response.data.products;
+    isLoading.value = true
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    const response = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
+    products.value = response.data.products
   } catch (error) {
-    console.error('API 請求錯誤:', error);
+    console.error('API 錯誤:', error)
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
+// 加入購物車並開啟購物車側欄（透過 props 傳入的方法）
 const addToCart = async (product) => {
   const data = {
     data: {
       product_id: product.id,
-      qty: product.qty || 1,
-    },
-  };
-  try {
-    isLoading.value = true;
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const apiPath = import.meta.env.VITE_API_PATH;
-    const response = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data);
-
-    messageStore.setMessage({
-      title: '成功加入購物車',
-      text: '商品已加入購物車',
-      type: 'success',
-    });
-
-    cartStore.getCart();
-    closeProductModal();
-    openCartSidebar();
-  } catch (error) {
-    console.error(error);
-    messageStore.setMessage({
-      title: '加入購物車失敗',
-      text: '商品無法加入購物車',
-      type: 'danger',
-    });
-  } finally {
-    isLoading.value = false;
+      qty: product.qty || 1
+    }
   }
-};
+  try {
+    isLoading.value = true
+    const apiUrl = import.meta.env.VITE_API_URL
+    const apiPath = import.meta.env.VITE_API_PATH
+    await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, data)
 
+    selectedProduct.value = null // 關閉 Modal
+    await props.getCart() // 更新購物車內容
+    props.openCartSidebar() // 顯示 OffsetWrapper（購物車側欄）
+  } catch (error) {
+    console.error('加入購物車失敗', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 控制 Modal 開關
 const openProductModal = (product) => {
-  selectedProduct.value = product;
-};
+  selectedProduct.value = product
+}
 const closeProductModal = () => {
-  selectedProduct.value = null;
-};
+  selectedProduct.value = null
+}
 
-const openCartSidebar = () => {
-  cartStore.isCartOpen = true;
-};
-const closeCartSidebar = () => {
-  cartStore.isCartOpen = false;
-};
-
+// 控制商品分類篩選
 const handleFilter = (category) => {
-  selectedCategory.value = category;
-};
+  selectedCategory.value = category
+}
 
+// 商品過濾（排除分類為「輪播」）
 const filteredProducts = computed(() => {
   if (selectedCategory.value === '*') {
-    return products.value.filter((product) => product.category !== '輪播');
+    return products.value.filter(p => p.category !== '輪播')
   } else {
-    return products.value.filter((product) => product.category === selectedCategory.value);
+    return products.value.filter(p => p.category === selectedCategory.value)
   }
-});
+})
 
+// 首次載入取得商品
 onMounted(() => {
-  getProducts();
-});
+  getProducts()
+})
 </script>

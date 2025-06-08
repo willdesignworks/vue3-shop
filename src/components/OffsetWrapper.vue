@@ -1,25 +1,25 @@
 <template>
   <div class="offset__wrapper">
-    <div :class="['shopping__cart', { 'shopping__cart__on': cartStore.isCartOpen }]">
+    <div :class="['shopping__cart', { 'shopping__cart__on': isCartOpen }]">
       <div class="shopping__cart__inner">
         <!-- 標題列 -->
         <div class="shp__cart__title">
           <h2 class="bradcaump-title">購物車</h2>
           <div class="offsetmenu__close__btn">
-            <a href="#" @click.prevent="handleClose">
+            <a href="#" @click.prevent="$emit('close')">
               <i class="zmdi zmdi-close"></i>
             </a>
           </div>
         </div>
 
-        <!-- 內容區 -->
+        <!-- 購物車內容 -->
         <div class="shp__cart__content">
           <!-- 空購物車 -->
-          <div v-if="!cartStore.cartData?.carts?.length" class="cartempty text-center">
+          <div v-if="!cartData?.carts?.length" class="cartempty text-center">
             <h5 class="mt-2">購物清單為空</h5>
             <ul class="shopping__btn">
               <li class="shp__checkout">
-                <RouterLink to="/products" @click="handleClose">繼續購物</RouterLink>
+                <RouterLink to="/products" @click="$emit('close')">繼續購物</RouterLink>
               </li>
             </ul>
           </div>
@@ -27,10 +27,10 @@
           <!-- 有商品 -->
           <div v-else>
             <div class="shp__cart__wrap">
-              <div class="shp__single__product" v-for="item in cartStore.cartData.carts" :key="item.id">
+              <div class="shp__single__product" v-for="item in cartData.carts" :key="item.id">
                 <div class="shp__pro__thumb">
                   <RouterLink to="/products">
-                    <img :src="item.product.imageUrl" alt="product images" />
+                    <img :src="item.product.imageUrl" alt="product" />
                   </RouterLink>
                 </div>
                 <div class="shp__pro__details">
@@ -39,7 +39,7 @@
                   <span class="shp__price">NT ${{ item.final_total }}</span>
                 </div>
                 <div class="remove__btn">
-                  <a href="#" @click.prevent="removeCartItem(item.id)">
+                  <a href="#" @click.prevent="$emit('remove-item', item.id)">
                     <i class="zmdi zmdi-close"></i>
                   </a>
                 </div>
@@ -47,7 +47,7 @@
             </div>
 
             <ul class="shoping__total">
-              <li class="subtotal">小計: <span class="total__price">NT ${{ cartStore.cartData.final_total }}</span></li>
+              <li class="subtotal">小計: <span class="total__price">NT ${{ cartData.final_total }}</span></li>
               <li class="shp__checkout">
                 <RouterLink to="/checkout">結帳</RouterLink>
               </li>
@@ -60,21 +60,12 @@
 </template>
 
 <script setup>
-import { useCartStore } from '../stores/cartStore';
-const cartStore = useCartStore();
+defineProps({
+  isCartOpen: Boolean, // 控制側邊欄開關
+  cartData: Object     // 購物車資料
+})
 
-const handleClose = () => {
-  cartStore.isCartOpen = false;
-};
-
-const removeCartItem = async (id) => {
-  try {
-    const res = await cartStore.removeCartItem(id);
-    await cartStore.getCart();
-  } catch (error) {
-    console.error('刪除商品失敗', error);
-  }
-};
+defineEmits(['close', 'remove-item']) // emit 事件：關閉、刪除商品
 </script>
 
 <style scoped>

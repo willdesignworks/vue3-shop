@@ -38,10 +38,10 @@
                   <span class="ti-user"></span>
                 </router-link>
               </li>
-              <li class="cart__menu position-relative" @click="openCartSidebar">
+              <li class="cart__menu position-relative" @click="$emit('toggle-cart')">
                 <span class="ti-shopping-cart"></span>
-                <span v-if="cartStore.cartData?.carts?.length > 0" class="bootstarplength">
-                  {{ cartStore.cartData.carts.length }}
+                <span v-if="cartData?.carts?.length > 0" class="bootstarplength">
+                  {{ cartData.carts.length }}
                 </span>
               </li>
             </ul>
@@ -54,11 +54,11 @@
 </template>
 
 <script setup>
-import { useCartStore } from '../stores/cartStore'
+defineProps({
+  cartData: Object // 從父層傳入購物車資料
+})
 
-const cartStore = useCartStore()
-
-const openCartSidebar = () => {
-  cartStore.openCartSidebar()
-}
+defineEmits(['toggle-cart']) // 點擊購物車 icon 時通知父層開關 OffsetWrapper
 </script>
+
+<style scoped></style>
