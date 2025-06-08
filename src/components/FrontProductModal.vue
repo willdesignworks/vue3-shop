@@ -73,7 +73,7 @@ const props = defineProps({
   getCart: Function,
   openCartSidebar: Function,
 })
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'add-to-cart', 'open-cart'])
 
 const qty = ref(1)
 const messageStore = useMessageStore()
@@ -90,12 +90,15 @@ const handleAddToCart = async () => {
       qty: qty.value,
     },
   }
+
   try {
     const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
-    messageStore.addMessage(res.data)
-    props.getCart()
-    emit('close')
-    props.openCartSidebar()
+    messageStore.addMessage(res.data) // 顯示訊息
+
+    props.getCart?.()
+    emit('add-to-cart', { ...props.product, qty: qty.value })
+    emit('close')       // 關閉 modal
+    emit('open-cart')   // 開啟 OffsetWrapper (父層)
   } catch (error) {
     console.error(error)
   }
