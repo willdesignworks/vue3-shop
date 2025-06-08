@@ -78,6 +78,16 @@ const emit = defineEmits(['close']);
 const messageStore = useMessageStore();
 const qty = ref(1);
 
+// 產品數量
+const increaseQty = () => {
+  qty.value += 1
+}
+const decreaseQty = () => {
+  if (qty.value > 1) {
+    qty.value -= 1
+  }
+}
+
 // 點擊加入購物車
 const handleAddToCart = async () => {
   const payload = {
