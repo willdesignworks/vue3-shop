@@ -28,14 +28,13 @@ export const useCartStore = defineStore("cart", {
         console.error("取得購物車資料失敗", error);
       }
     },
-
     // 移除-商品
-    async removeCartItem(item) {
+    async removeCartItem(id) {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const apiPath = import.meta.env.VITE_API_PATH;
         const res = await axios.delete(
-          `${apiUrl}/v2/api/${apiPath}/cart/${item.id}`
+          `${apiUrl}/v2/api/${apiPath}/cart/${id}`
         );
         await this.getCart(); // 移除後重新取得購物車資料
         return res; // 回傳結果讓外部可以用來顯示訊息等
