@@ -76,12 +76,10 @@
 </template>
 
 <script setup>
-// 引入必要功能
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
-// 引入元件
 import Loading from '../components/Loading.vue';
 import Carousel from '../components/Carousel.vue';
 import RelatedNavbar from '../components/RelatedNavbar.vue';
@@ -91,6 +89,11 @@ import { useMessageStore } from '../stores/messageStore';
 const route = useRoute();
 const router = useRouter();
 const messageStore = useMessageStore();
+
+// ✅ 接收父層傳入 getCart 方法
+const props = defineProps({
+  getCart: Function
+});
 
 const product = ref({});
 const qty = ref(1);
@@ -123,6 +126,10 @@ const addToCart = async () => {
         qty: qty.value,
       }
     });
+
+    // ✅ 加入購物車後同步更新
+    await props.getCart?.();
+
     messageStore.addMessage({ title: '加入成功', text: '商品已加入購物車', type: 'success' });
     isAddedToCart.value = true;
   } catch (err) {
@@ -140,13 +147,11 @@ const buyNow = async () => {
 const increaseQty = () => qty.value += 1;
 const decreaseQty = () => { if (qty.value > 1) qty.value -= 1; };
 
-// 初始載入
 onMounted(() => {
   window.scrollTo(0, 0);
   getProduct(route.params.id);
 });
 
-// 若網址 id 改變（使用 <router-view :key="$route.fullPath"> 時有用）
 watch(() => route.params.id, (id) => {
   getProduct(id);
 });
