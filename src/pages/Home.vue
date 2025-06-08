@@ -143,16 +143,16 @@ const addToCart = async (product) => {
     isLoading.value = false;
   }
 };
-
+// Modal
 const openProductModal = (product) => {
   selectedProduct.value = product;
 };
 const closeProductModal = () => {
   selectedProduct.value = null;
 };
-
+// 開啟購物車
 const openCartSidebar = () => {
-  cartStore.isCartOpen = true // 如果你用 pinia 控制購物車開關，這裡打開
+  cartStore.isCartOpen = true
 }
 
 const handleFilter = (category) => {
