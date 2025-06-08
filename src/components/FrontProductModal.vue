@@ -32,12 +32,13 @@
                   </div>
                 </div>
 
+                <!-- 數量控制 -->
                 <div class="input-group my-3 bg-light rounded">
                   <div class="input-group-prepend">
                     <button class="btn btn-outline-dark border-0 py-2" type="button"
-                      @click="qty = qty > 1 ? qty - 1 : 1">
+                      @click="qty = qty === 1 ? 1 : qty - 1">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 11H5V13H19V11Z" />
+                        <path d="M19 11H5V13H19V11Z"></path>
                       </svg>
                     </button>
                   </div>
@@ -46,17 +47,19 @@
                   <div class="input-group-prepend">
                     <button class="btn btn-outline-dark border-0 py-2" type="button" @click="qty++">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" />
+                        <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
                       </svg>
                     </button>
                   </div>
                 </div>
 
+                <!-- 加入購物車按鈕 -->
                 <div class="addtocart-btn">
-                  <button class="btn btn-dark border-0 py-2 w-100" @click="handleAddToCart">
+                  <button class="btn btn-dark border-0 py-2 w-100" @click="addToCart">
                     加入購物車
                   </button>
                 </div>
+
               </div>
             </div>
           </div>
@@ -71,28 +74,61 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useMessageStore } from '../stores/messageStore'
 
+// Props 與 Emits
 const props = defineProps({
   product: Object,
+  getCart: Function,
+  setCartOpen: Function
 })
+const emit = defineEmits(['close'])
 
-const emit = defineEmits(['close', 'add-to-cart', 'open-cart'])
-
+// 狀態
 const qty = ref(1)
+const messageStore = useMessageStore()
 
-const handleAddToCart = () => {
-  emit('add-to-cart', { ...props.product, qty: qty.value })
-  emit('close')        // 關閉 modal
-  emit('open-cart')    // 開啟購物車 OffsetWrapper
+// 加入購物車 API
+const addToCart = async () => {
+  const apiUrl = import.meta.env.VITE_API_URL
+  const apiPath = import.meta.env.VITE_API_PATH
+
+  try {
+    const payload = {
+      data: {
+        product_id: props.product.id,
+        qty: qty.value
+      }
+    }
+
+    const res = await axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, payload)
+
+    // 顯示成功訊息
+    messageStore.setMessage({
+      title: '成功加入購物車',
+      text: res.data.message,
+      type: 'success'
+    })
+
+    // 關閉 Modal
+    emit('close')
+
+    // 更新購物車內容 + 顯示 OffsetWrapper
+    props.getCart?.()
+    props.setCartOpen?.(true)
+
+  } catch (err) {
+    messageStore.setMessage({
+      title: '加入購物車失敗',
+      text: err?.response?.data?.message || '發生錯誤',
+      type: 'danger'
+    })
+  }
+}
+
+// 關閉 modal
+const close = () => {
+  emit('close')
 }
 </script>
-
-<style scoped>
-.modal-backdrop {
-  z-index: 1040;
-}
-
-.modal {
-  z-index: 1050;
-}
-</style>
