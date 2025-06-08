@@ -6,6 +6,9 @@
     <FrontProductModal v-if="selectedProduct" :product="selectedProduct" @close="closeProductModal"
       @add-to-cart="addToCart" @open-cart="openCartSidebar" />
 
+    <!-- 購物車側邊欄 -->
+    <OffsetWrapper v-if="cartStore.isCartOpen" @close="closeCartSidebar" />
+
     <HomeBanner />
 
     <!-- 商品區域 -->
@@ -81,6 +84,7 @@ import axios from 'axios';
 import Loading from '../components/Loading.vue';
 import FrontProductModal from '../components/FrontProductModal.vue';
 import HomeBanner from '../components/HomeBanner.vue';
+import OffsetWrapper from '../components/OffsetWrapper.vue';
 
 import { useMessageStore } from '../stores/messageStore';
 import { useCartStore } from '../stores/cartStore';
@@ -112,7 +116,7 @@ const addToCart = async (product) => {
   const data = {
     data: {
       product_id: product.id,
-      qty: 1,
+      qty: product.qty || 1,
     },
   };
   try {
@@ -124,36 +128,37 @@ const addToCart = async (product) => {
     messageStore.setMessage({
       title: '成功加入購物車',
       text: '商品已加入購物車',
-      type: 'success'
+      type: 'success',
     });
 
     cartStore.getCart();
     closeProductModal();
-    window.scrollTo(0, 0);
-    router.push('/cart');
-
+    openCartSidebar();
   } catch (error) {
     console.error(error);
     messageStore.setMessage({
       title: '加入購物車失敗',
       text: '商品無法加入購物車',
-      type: 'danger'
+      type: 'danger',
     });
   } finally {
     isLoading.value = false;
   }
-}
-// Modal
+};
+
 const openProductModal = (product) => {
   selectedProduct.value = product;
 };
 const closeProductModal = () => {
   selectedProduct.value = null;
 };
-// 開啟購物車
+
 const openCartSidebar = () => {
-  cartStore.isCartOpen = true
-}
+  cartStore.isCartOpen = true;
+};
+const closeCartSidebar = () => {
+  cartStore.isCartOpen = false;
+};
 
 const handleFilter = (category) => {
   selectedCategory.value = category;
