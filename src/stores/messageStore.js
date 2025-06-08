@@ -2,27 +2,21 @@ import { defineStore } from "pinia";
 
 export const useMessageStore = defineStore("message", {
   state: () => ({
-    message: {
-      title: "",
-      text: "",
-      type: "", // success | danger | warning ...
-    },
+    messages: [], // 改成陣列
   }),
   actions: {
-    setMessage(payload) {
-      this.message = { ...payload };
+    addMessage(payload) {
+      const id = Date.now(); // 或用 uuid
+      const newMsg = { id, ...payload };
+      this.messages.push(newMsg);
 
       // 3 秒後自動清除
       setTimeout(() => {
-        this.clearMessage();
+        this.removeMessage(id);
       }, 3000);
     },
-    clearMessage() {
-      this.message = {
-        title: "",
-        text: "",
-        type: "",
-      };
+    removeMessage(id) {
+      this.messages = this.messages.filter((msg) => msg.id !== id);
     },
   },
 });

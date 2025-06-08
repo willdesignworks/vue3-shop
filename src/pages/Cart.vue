@@ -136,8 +136,8 @@ const removeCartItem = async (id) => {
     const apiPath = import.meta.env.VITE_API_PATH
     await axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
 
-    messageStore.setMessage({
-      title: '成功',
+    messageStore.addMessage({
+      title: '刪除成功',
       text: '商品已從購物車移除',
       type: 'success'
     })
@@ -145,7 +145,7 @@ const removeCartItem = async (id) => {
     await props.getCart()
   } catch (error) {
     console.error('移除失敗:', error)
-    messageStore.setMessage({
+    messageStore.addMessage({
       title: '錯誤',
       text: '刪除失敗，請稍後再試',
       type: 'danger'
