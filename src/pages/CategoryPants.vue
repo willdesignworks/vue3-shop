@@ -81,6 +81,6 @@ const getProducts = async (page = 1, category = '褲子') => {
 }
 
 onMounted(() => {
-  getProducts()
+  getProducts(1, '褲子')
 })
 </script>
