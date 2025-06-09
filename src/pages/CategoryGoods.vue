@@ -9,7 +9,7 @@
           <div class="row">
             <div class="col-12">
               <div class="bradcaump__inner text-center">
-                <h2 class="bradcaump-title">褲子</h2>
+                <h2 class="bradcaump-title">配件</h2>
               </div>
             </div>
           </div>
@@ -23,7 +23,7 @@
         <div class="htc__product__container">
           <div class="row">
             <div class="col-md-2">
-              <ProductsCategorySidebar activeAccordion="pants" />
+              <ProductsCategorySidebar activeAccordion="goods" />
             </div>
             <div class="col-md-10">
               <div class="row">
@@ -72,7 +72,7 @@ const pagination = ref({
   has_pre: false
 })
 const isLoading = ref(false)
-const category = '褲子'
+const category = '配件'
 const pageSize = 6
 
 // 切換分頁
@@ -102,7 +102,7 @@ const getProducts = async () => {
   try {
     const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
     allProducts.value = res.data.products
-    console.log('products 褲子:', res);
+    console.log('products 配件:', res);
     renderCurrentPage()
   } catch (error) {
     console.error('API 請求錯誤:', error)

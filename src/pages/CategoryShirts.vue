@@ -43,7 +43,7 @@
               </div>
 
               <nav class="d-flex justify-content-center">
-                <Pagination :pagination="pagination" @change-page="getProducts" />
+                <Pagination :pagination="pagination" @change-page="changePage" />
               </nav>
             </div>
           </div>
@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-// 引入必要功能
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
@@ -64,21 +63,47 @@ import ProductsCategorySidebar from '../components/ProductsCategorySidebar.vue'
 import Pagination from '../components/Pagination.vue'
 
 // 狀態變數
+const allProducts = ref([])
 const products = ref([])
-const pagination = ref({})
+const pagination = ref({
+  total_pages: 0,
+  current_page: 1,
+  has_next: false,
+  has_pre: false
+})
 const isLoading = ref(false)
+const category = '服飾'
+const pageSize = 6
 
-// 取得商品資料
-const getProducts = async (page = 1, category = '服飾') => {
+// 切換分頁
+const changePage = (page) => {
+  pagination.value.current_page = page
+  renderCurrentPage()
+}
+
+// 渲染指定分頁內容
+const renderCurrentPage = () => {
+  const start = (pagination.value.current_page - 1) * pageSize
+  const end = start + pageSize
+  const filtered = allProducts.value.filter(p => p.category === category)
+  products.value = filtered.slice(start, end)
+
+  const totalPages = Math.ceil(filtered.length / pageSize)
+  pagination.value.total_pages = totalPages
+  pagination.value.has_pre = pagination.value.current_page > 1
+  pagination.value.has_next = pagination.value.current_page < totalPages
+}
+
+// 載入全部商品並篩選
+const getProducts = async () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiPath = import.meta.env.VITE_API_PATH
   isLoading.value = true
   try {
-    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products?page=${page}&category=${category}`)
+    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
+    allProducts.value = res.data.products
     console.log('products 服飾:', res);
-
-    products.value = res.data.products
-    pagination.value = res.data.pagination
+    renderCurrentPage()
   } catch (error) {
     console.error('API 請求錯誤:', error)
   } finally {
@@ -87,6 +112,6 @@ const getProducts = async (page = 1, category = '服飾') => {
 }
 
 onMounted(() => {
-  getProducts(1, '服飾')
+  getProducts()
 })
 </script>
