@@ -54,10 +54,14 @@
 </template>
 
 <script setup>
+// 引入必要功能
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
+// 引入元件
+import Loading from '../components/Loading.vue'
 import ProductsCategorySidebar from '../components/ProductsCategorySidebar.vue'
+import Pagination from '../components/Pagination.vue'
 
 // 狀態變數
 const products = ref([])
@@ -71,6 +75,8 @@ const getProducts = async (page = 1, category = '服飾') => {
   isLoading.value = true
   try {
     const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products?page=${page}&category=${category}`)
+    console.log('products 服飾:', res);
+
     products.value = res.data.products
     pagination.value = res.data.pagination
   } catch (error) {
