@@ -10,6 +10,7 @@ import CategoryPants from "../pages/CategoryPants.vue";
 import CategoryGoods from "../pages/CategoryGoods.vue";
 import Cart from "../pages/Cart.vue";
 import Store from "../pages/Store.vue";
+import Checkout from "../pages/Checkout.vue";
 
 const routes = [
   {
@@ -60,6 +61,11 @@ const routes = [
         path: "store",
         name: "store",
         component: Store,
+      },
+      {
+        path: "checkout",
+        name: "checkout",
+        component: Checkout,
       },
     ],
   },
