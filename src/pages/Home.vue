@@ -23,7 +23,7 @@
             </div>
           </div>
 
-          <div class="row product__list foo">
+          <transition-group name="fade" tag="div" class="row product__list foo" appear>
             <div v-for="product in filteredProducts" :key="product.id"
               class="col-md-3 single__pro col-lg-3 col-md-4 col-sm-12">
               <div class="product">
@@ -65,7 +65,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </transition-group>
 
         </div>
       </div>
@@ -168,3 +168,20 @@ onMounted(() => {
   getProducts()
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fade-move {
+  transition: all 0.3s ease;
+}
+</style>

@@ -34,7 +34,7 @@
           <div class="col-md-2 col-lg-2 col-6">
             <ul class="menu-extra">
               <li>
-                <a ref="https://willdesignworks.github.io/reactshop/#/login" target="_blank">
+                <a href="https://willdesignworks.github.io/reactshop/#/login" target="_blank">
                   <span class="ti-user"></span>
                 </a>
               </li>
