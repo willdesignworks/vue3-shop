@@ -34,9 +34,9 @@
           <div class="col-md-2 col-lg-2 col-6">
             <ul class="menu-extra">
               <li>
-                <router-link to="https://willdesignworks.github.io/reactshop/#/login">
+                <a ref="https://willdesignworks.github.io/reactshop/#/login" target="_blank">
                   <span class="ti-user"></span>
-                </router-link>
+                </a>
               </li>
               <li class="cart__menu position-relative" @click="$emit('toggle-cart')">
                 <span class="ti-shopping-cart"></span>

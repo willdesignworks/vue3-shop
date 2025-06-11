@@ -8,9 +8,10 @@ import Product from "../pages/ProductDetail.vue";
 import CategoryShirts from "../pages/CategoryShirts.vue";
 import CategoryPants from "../pages/CategoryPants.vue";
 import CategoryGoods from "../pages/CategoryGoods.vue";
-import Cart from "../pages/Cart.vue";
 import Store from "../pages/Store.vue";
+import Cart from "../pages/Cart.vue";
 import Checkout from "../pages/Checkout.vue";
+import Success from "../pages/Success.vue";
 
 const routes = [
   {
@@ -53,19 +54,24 @@ const routes = [
         component: CategoryGoods,
       },
       {
-        path: "cart",
-        name: "cart",
-        component: Cart,
-      },
-      {
         path: "store",
         name: "store",
         component: Store,
       },
       {
+        path: "cart",
+        name: "cart",
+        component: Cart,
+      },
+      {
         path: "checkout",
         name: "checkout",
         component: Checkout,
+      },
+      {
+        path: "success/:id",
+        name: "success",
+        component: Success,
       },
     ],
   },
