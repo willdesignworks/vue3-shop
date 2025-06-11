@@ -1,7 +1,7 @@
 <template>
   <Loading :isLoading="isLoading" />
 
-  <div class="cart-main-area bg__white" v-if="product.title">
+  <div class="cart-main-area bg__white" v-if="product && product.title">
     <div class="container ProductDetail">
       <div class="row align-items-center">
         <div class="col-md-7">
@@ -10,7 +10,7 @@
         <div class="col-md-5">
           <!--<RelatedNavbar v-model:activeTab="activeTab" />-->
 
-          <h2 class="fw-bold h1 mb-2">{{ product.title }}</h2>
+          <h2 class="fw-bold h1 mb-2">{{ product?.title }}</h2>
           <p class="productpromotionstag mb-3">全店，NT4500免運費</p>
           <p class="h4 fw-bold">NT ${{ product.price }}</p>
 
@@ -113,6 +113,7 @@ const route = useRoute();
 const router = useRouter();
 const messageStore = useMessageStore(); // Pinia 的訊息框
 
+// API-商品詳細內容
 const getProduct = async (id) => {
   isLoading.value = true;
   try {
@@ -139,7 +140,7 @@ const addToCart = async () => {
       }
     });
 
-    // ✅ 加入購物車後同步更新
+    // 加入購物車後同步更新
     await props.getCart?.();
 
     messageStore.addMessage({ title: '加入成功', text: '商品已加入購物車', type: 'success' });
@@ -170,12 +171,12 @@ const buyNow = async () => {
       type: 'success'
     })
 
-    // ✅ 呼叫外部購物車刷新方法（如果有傳入）
+    // 呼叫外部購物車刷新方法（如果有傳入）
     if (typeof props.getCart === 'function') {
       await props.getCart()
     }
 
-    // ✅ 開啟 OffsetWrapper 側邊購物車（如果有傳入）
+    // 開啟 OffsetWrapper 側邊購物車（如果有傳入）
     if (typeof props.openCartSidebar === 'function') {
       props.openCartSidebar()
     }

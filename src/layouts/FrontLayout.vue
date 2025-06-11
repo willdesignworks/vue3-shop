@@ -40,14 +40,14 @@ import Navbar from '../components/Navbar.vue'
 import OffsetWrapper from '../components/OffsetWrapper.vue'
 import Footer from '../components/Footer.vue'
 
-// 狀態資料
+// 狀態
 const cartData = ref({ carts: [], final_total: 0 }) // 儲存購物車資料
 const products = ref([]) // 商品資料（預備傳遞）
-const isCartOpen = ref(false) // 控制 OffsetWrapper 是否開啟
-const showScrollUp = ref(false) // 控制 scrollUp 按鈕是否顯示
-const marginBottom = ref(0) // 控制頁尾 margin-bottom（避免被 footer 蓋住）
+const isCartOpen = ref(false) // OffsetWrapper 開啟
+const showScrollUp = ref(false) // scrollUp 顯示
+const marginBottom = ref(0) // 控制頁尾 margin-bottom
 
-// 取得購物車資料
+// API-取得購物車資料
 const getCart = async () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiPath = import.meta.env.VITE_API_PATH
@@ -59,12 +59,16 @@ const getCart = async () => {
   }
 }
 
-// 取得商品資料
+// API-取得商品資料
 const getProducts = async () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiPath = import.meta.env.VITE_API_PATH
-  const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products`)
-  products.value = res.data.products
+  try {
+    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products`)
+    products.value = res.data.products
+  } catch (error) {
+    console.error('取得商品資料失敗', error)
+  }
 }
 
 // 開關側邊購物車
