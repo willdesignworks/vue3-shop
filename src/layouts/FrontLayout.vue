@@ -40,7 +40,6 @@ import Navbar from '../components/Navbar.vue'
 import OffsetWrapper from '../components/OffsetWrapper.vue'
 import Footer from '../components/Footer.vue'
 
-
 // 狀態資料
 const cartData = ref({ carts: [], final_total: 0 }) // 儲存購物車資料
 const products = ref([]) // 商品資料（預備傳遞）

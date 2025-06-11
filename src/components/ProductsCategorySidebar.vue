@@ -14,7 +14,8 @@
         <div class="card-body py-0">
           <ul class="list-unstyled">
             <li>
-              <RouterLink to="/products" class="py-2 d-block text-muted">所有商品</RouterLink>
+              <RouterLink to="/products"
+                :class="['py-2 d-block text-muted', route.path === '/products' ? 'active' : '']">所有商品</RouterLink>
             </li>
           </ul>
         </div>
@@ -37,10 +38,12 @@
         <div class="card-body py-0">
           <ul class="list-unstyled">
             <li>
-              <RouterLink to="/categoryshirts" class="py-2 d-block text-muted">所有服飾</RouterLink>
+              <RouterLink to="/categoryshirts"
+                :class="['py-2 d-block text-muted', route.path === '/categoryshirts' ? 'active' : '']">所有服飾</RouterLink>
             </li>
             <li>
-              <RouterLink to="/categorypants" class="py-2 d-block text-muted">所有褲子</RouterLink>
+              <RouterLink to="/categorypants"
+                :class="['py-2 d-block text-muted', route.path === '/categorypants' ? 'active' : '']">所有褲子</RouterLink>
             </li>
           </ul>
         </div>
@@ -61,7 +64,8 @@
         <div class="card-body py-0">
           <ul class="list-unstyled">
             <li>
-              <RouterLink to="/categorygoods" class="py-2 d-block text-muted">所有配件</RouterLink>
+              <RouterLink to="/categorygoods"
+                :class="['py-2 d-block text-muted', route.path === '/categorygoods' ? 'active' : '']">所有配件</RouterLink>
             </li>
           </ul>
         </div>
@@ -71,8 +75,12 @@
 </template>
 
 <script setup>
+// 引入必要功能
 import { ref, watch } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+
+// 狀態資料
+const route = useRoute()
 
 const props = defineProps({
   activeAccordion: {
