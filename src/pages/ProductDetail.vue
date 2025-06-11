@@ -116,10 +116,11 @@ const messageStore = useMessageStore(); // Pinia 的訊息框
 // API-商品詳細內容
 const getProduct = async (id) => {
   isLoading.value = true;
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiPath = import.meta.env.VITE_API_PATH;
   try {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const apiPath = import.meta.env.VITE_API_PATH;
     const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/product/${id}`);
+    // 把資料存進 狀態，觸發畫面更新
     product.value = res.data.product;
   } catch (error) {
     messageStore.addMessage({ title: '錯誤', text: '無法取得商品資料', type: 'danger' });

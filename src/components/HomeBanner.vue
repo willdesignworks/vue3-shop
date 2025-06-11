@@ -24,27 +24,21 @@
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios'
 
-// 輪播資料
 const slides = ref([])
 
-// 載入 API 商品
 const getBannerData = async () => {
+  const apiUrl = import.meta.env.VITE_API_URL
+  const apiPath = import.meta.env.VITE_API_PATH
+
   try {
-    // 抓取 .env 檔案中設定
-    const apiUrl = import.meta.env.VITE_API_URL
-    const apiPath = import.meta.env.VITE_API_PATH
-
-    // 使用 axios 取得輪播分類商品
-    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products?category=輪播`)
-
-    // 把商品資料存進 slides，觸發畫面更新
-    slides.value = res.data.products
+    // 取得所有商品後過濾分類
+    const res = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
+    slides.value = res.data.products.filter(p => p.category === '輪播')
   } catch (error) {
-    console.error('API 錯誤:', error)
+    console.error('輪播資料錯誤:', error)
   }
 }
 
-// 初始化 Owl Carousel
 const initCarousel = () => {
   if (window.$ && typeof window.$.fn.owlCarousel === 'function') {
     const $slider = window.$('.slider__activation__wrap')

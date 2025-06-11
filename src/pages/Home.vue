@@ -105,6 +105,7 @@ const getProducts = async () => {
     const apiUrl = import.meta.env.VITE_API_URL
     const apiPath = import.meta.env.VITE_API_PATH
     const response = await axios.get(`${apiUrl}/v2/api/${apiPath}/products/all`)
+    console.log('Home 全部商品:', response);
     products.value = response.data.products
   } catch (error) {
     console.error('API 錯誤:', error)
