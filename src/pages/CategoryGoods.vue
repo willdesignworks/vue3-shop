@@ -112,6 +112,6 @@ const getProducts = async () => {
 }
 
 onMounted(() => {
-  getProducts()
+  getProducts(1, '配件')
 })
 </script>

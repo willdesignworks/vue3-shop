@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+// 引入必要功能
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
@@ -112,6 +113,6 @@ const getProducts = async () => {
 }
 
 onMounted(() => {
-  getProducts()
+  getProducts(1, '服飾')
 })
 </script>
